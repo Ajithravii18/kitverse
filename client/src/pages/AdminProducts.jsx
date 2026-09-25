@@ -88,21 +88,37 @@ export default function AdminProducts() {
 
           <div style={{ display: 'flex', gap: '15px' }}>
             <label style={{ flex: 1 }}>Team <input type="text" value={editing.team || ''} onChange={e => setEditing({...editing, team: e.target.value})} style={{ width: '100%', padding: '8px' }}/></label>
-            <label style={{ flex: 1 }}>Category 
-              <select value={editing.category} onChange={e => setEditing({...editing, category: e.target.value})} style={{ width: '100%', padding: '8px' }}>
-                <option value="club">Club</option>
-                <option value="national">National</option>
+            <label style={{ flex: 1 }}>Type 
+              <select value={editing.productType || 'jersey'} onChange={e => setEditing({...editing, productType: e.target.value})} style={{ width: '100%', padding: '8px' }}>
+                <option value="jersey">Jersey</option>
+                <option value="shorts">Shorts</option>
+                <option value="track-pants">Track Pants</option>
+                <option value="collar-tshirt">Collar T-Shirt</option>
               </select>
             </label>
           </div>
 
           <div style={{ display: 'flex', gap: '15px' }}>
+            <label style={{ flex: 1 }}>Category 
+              <select value={editing.category || ''} onChange={e => setEditing({...editing, category: e.target.value})} style={{ width: '100%', padding: '8px' }}>
+                <option value="">None</option>
+                <option value="club">Club</option>
+                <option value="national">National</option>
+              </select>
+            </label>
             <label style={{ flex: 1 }}>Quality 
-              <select value={editing.quality} onChange={e => setEditing({...editing, quality: e.target.value})} style={{ width: '100%', padding: '8px' }}>
+              <select value={editing.quality || ''} onChange={e => setEditing({...editing, quality: e.target.value})} style={{ width: '100%', padding: '8px' }}>
+                <option value="">None</option>
                 {QUALITIES.map(q => <option key={q} value={q}>{q}</option>)}
               </select>
             </label>
+          </div>
+
+          <div style={{ display: 'flex', gap: '15px' }}>
             <label style={{ flex: 1 }}>Price (INR) <input required type="number" min="0" step="1" value={editing.price} onChange={e => setEditing({...editing, price: e.target.value})} style={{ width: '100%', padding: '8px' }}/></label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '20px' }}>
+              <input type="checkbox" checked={editing.retro} onChange={e => setEditing({...editing, retro: e.target.checked})} /> Retro
+            </label>
           </div>
 
           <fieldset style={{ padding: '15px', border: '1px solid #ddd', display: 'flex', flexDirection: 'column', gap: '10px' }}>

@@ -10,6 +10,8 @@ import ProductDetailModal from '../components/ProductDetailModal.jsx';
 import ProductImage from '../components/ProductImage.jsx';
 import useBag from '../useBag.js';
 import {money} from '../format.js';
+import CategoryCircleNav from '../components/shop/CategoryCircleNav.jsx';
+import { ProductCard } from '../components/shop/ProductCard.jsx';
 import {selectProducts, paginate} from '../../../shared/storefront.js';
 import useScrollReveal from '../useScrollReveal.js';
 const collections = [['all','All jerseys'], ['club','Club teams'], ['national','National teams']];
@@ -119,7 +121,7 @@ function App() {
           </svg>
           KITVERSE
         </a>
-        <nav className="desktop-nav" aria-label="Main navigation">{collections.map(([value,label])=><button key={value} className={category===value?'current':''} onClick={()=>browse(value)} aria-current={category===value?'page':undefined}>{label}</button>)}<a href="#bestsellers">Featured jerseys</a><a href="#qualities">Quality guide</a></nav>
+        <nav className="desktop-nav" aria-label="Main navigation">{collections.map(([value,label])=><button key={value} className={category===value?'current':''} onClick={()=>browse(value)} aria-current={category===value?'page':undefined}>{label}</button>)}<a href="#bestsellers">Featured jerseys</a><a href="#qualities">Quality guide</a><Link to="/shop">Shop All</Link></nav>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginLeft: 'auto' }}>
           {authCustomer ? (
@@ -282,6 +284,8 @@ function App() {
           <span>FOOTBALL IS PERSONAL</span><b>✳</b><span>CLUB LOYALTY. NATIONAL PRIDE.</span><b>✳</b><span>FIND YOUR COLOURS</span><b>✳</b><span>FOOTBALL IS PERSONAL</span><b>✳</b><span>CLUB LOYALTY. NATIONAL PRIDE.</span><b>✳</b><span>FIND YOUR COLOURS</span><b>✳</b><span>FOOTBALL IS PERSONAL</span><b>✳</b><span>CLUB LOYALTY. NATIONAL PRIDE.</span><b>✳</b><span>FIND YOUR COLOURS</span><b>✳</b>
         </div>
       </div>
+    <CategoryCircleNav />
+
 
       {/* ── BESTSELLERS / MOST POPULAR SECTION ── */}
       <section id="bestsellers" className="bestsellers-section reveal">
@@ -602,6 +606,79 @@ function App() {
           )}
         </>)}
       </section>
+
+      <section id="shop-track-pants" className="bestsellers-section reveal" style={{ borderTop: '1px solid #eaeaea', marginTop: '20px', paddingTop: '40px' }}>
+        <div className="bestsellers-header">
+          <div>
+            <span className="bestsellers-eyebrow">SHOP APPAREL</span>
+            <h2>Track Pants</h2>
+          </div>
+          <div className="bestsellers-sub-wrap">
+            <p className="bestsellers-sub">Complete your kit.</p>
+            <Link to={`/shop?type=${type}`} className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Track Pants</Link>
+          </div>
+        </div>
+        {products.filter(p => p.productType === 'track-pants').length === 0 ? (
+          <div style={{ padding: '40px', textAlign: 'center', background: '#f9f9f9', borderRadius: '8px', color: '#666', border: '1px dashed #ccc' }}>
+            <p>New arrivals coming soon.</p>
+          </div>
+        ) : (
+          <div className="bestsellers-grid">
+            {products.filter(p => p.productType === 'track-pants').slice(0, 4).map((p, index) => (
+              <ProductCard key={p.slug} p={p} pIdx={index} onOpen={() => setSelected(p)} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section id="shop-shorts" className="bestsellers-section reveal" style={{ borderTop: '1px solid #eaeaea', marginTop: '20px', paddingTop: '40px' }}>
+        <div className="bestsellers-header">
+          <div>
+            <span className="bestsellers-eyebrow">SHOP APPAREL</span>
+            <h2>Shorts</h2>
+          </div>
+          <div className="bestsellers-sub-wrap">
+            <p className="bestsellers-sub">Complete your kit.</p>
+            <Link to={`/shop?type=${type}`} className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Shorts</Link>
+          </div>
+        </div>
+        {products.filter(p => p.productType === 'shorts').length === 0 ? (
+          <div style={{ padding: '40px', textAlign: 'center', background: '#f9f9f9', borderRadius: '8px', color: '#666', border: '1px dashed #ccc' }}>
+            <p>New arrivals coming soon.</p>
+          </div>
+        ) : (
+          <div className="bestsellers-grid">
+            {products.filter(p => p.productType === 'shorts').slice(0, 4).map((p, index) => (
+              <ProductCard key={p.slug} p={p} pIdx={index} onOpen={() => setSelected(p)} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section id="shop-collar-tshirts" className="bestsellers-section reveal" style={{ borderTop: '1px solid #eaeaea', marginTop: '20px', paddingTop: '40px' }}>
+        <div className="bestsellers-header">
+          <div>
+            <span className="bestsellers-eyebrow">SHOP APPAREL</span>
+            <h2>Collar T-Shirts</h2>
+          </div>
+          <div className="bestsellers-sub-wrap">
+            <p className="bestsellers-sub">Complete your kit.</p>
+            <Link to={`/shop?type=${type}`} className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Collar T-Shirts</Link>
+          </div>
+        </div>
+        {products.filter(p => p.productType === 'collar-tshirt').length === 0 ? (
+          <div style={{ padding: '40px', textAlign: 'center', background: '#f9f9f9', borderRadius: '8px', color: '#666', border: '1px dashed #ccc' }}>
+            <p>New arrivals coming soon.</p>
+          </div>
+        ) : (
+          <div className="bestsellers-grid">
+            {products.filter(p => p.productType === 'collar-tshirt').slice(0, 4).map((p, index) => (
+              <ProductCard key={p.slug} p={p} pIdx={index} onOpen={() => setSelected(p)} />
+            ))}
+          </div>
+        )}
+      </section>
+
       <section id="qualities" className="quality reveal"><div className="quality-intro"><div className="eyebrow">KNOW YOUR KIT</div><h2>The details<br/>make the difference.</h2><p>Each jersey is listed in the quality we have in stock. Check its available sizes before adding it to your bag.</p></div><div className="quality-grid">{['Stitched details. Check the product listing for the exact embroidered elements.','A coordinated jersey-and-shorts set. Both are included in this category.','Check each listing for fabric, badge construction and finishing.','A closer-fitting style. Check the garment measurements for your selected shirt.'].map((text,i)=><article key={qualities[i]} className="reveal" style={{ '--i': i }}><span>0{i+1} / {['THE DETAIL','THE FULL KIT','THE FINISH','THE FIT'][i]}</span><h3>{qualities[i]}</h3><p>{text}</p></article>)}</div></section>
       
         <section className="closing reveal"><p>DIFFERENT COLOURS. SAME OBSESSION.</p><h2>See you on matchday.</h2><a href="#shop">Back to the kit room ↗</a></section>
@@ -647,8 +724,8 @@ function App() {
       </div>
       <div className="footer-bottom">
         <div className="footer-bottom-left">
-          <span>� 2026 KITVERSE. All rights reserved.</span>
-          <span className="footer-disclaimer">Concept storefront � Images illustrative � No official club affiliation claimed.</span>
+          <span>� 2026 KITVERSE. All rights reserved.</span>
+          <span className="footer-disclaimer">Concept storefront � Images illustrative � No official club affiliation claimed.</span>
         </div>
         <div className="footer-bottom-badges">
           <span className="payment-badge">VISA</span>
@@ -657,7 +734,7 @@ function App() {
         </div>
       </div>
     </footer>
-    {menu&&<Modal label="Main navigation" className="menu-dialog" onClose={()=>setMenu(false)}><a href="#" className="logo" onClick={()=>setMenu(false)}>KITVERSE</a><p className="eyebrow">FIND YOUR COLOURS</p><nav className="menu-links" aria-label="Mobile navigation">{collections.map(([value,label])=><button key={value} onClick={()=>browse(value)}>{label}<span>↗</span></button>)}<a href="#qualities" onClick={()=>setMenu(false)}>Quality guide<span>↗</span></a></nav><p className="detail-note">Club loyalty. National pride.<br/>One love for the game.</p></Modal>}
+    {menu&&<Modal label="Main navigation" className="menu-dialog" onClose={()=>setMenu(false)}><a href="#" className="logo" onClick={()=>setMenu(false)}>KITVERSE</a><p className="eyebrow">FIND YOUR COLOURS</p><nav className="menu-links" aria-label="Mobile navigation">{collections.map(([value,label])=><button key={value} onClick={()=>browse(value)}>{label}<span>↗</span></button>)}<a href="#qualities" onClick={()=>setMenu(false)}>Quality guide<span>↗</span></a><Link to="/shop" onClick={()=>setMenu(false)}>Shop All<span>↗</span></Link></nav><p className="detail-note">Club loyalty. National pride.<br/>One love for the game.</p></Modal>}
     {selected && (
       <ProductDetailModal key={selected.slug}
         product={selected}

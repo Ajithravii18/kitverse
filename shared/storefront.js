@@ -1,14 +1,18 @@
-export const DEFAULT_FILTERS = {category: 'all', quality: 'All qualities', query: '', team: null, sort: 'featured'};
+export const DEFAULT_FILTERS = {category: 'all', quality: 'All qualities', query: '', team: null, sort: 'featured', type: 'all', retro: false, size: 'all'};
 
 export function selectProducts(products, filters = DEFAULT_FILTERS) {
-  const {category, quality, query, team, sort} = {...DEFAULT_FILTERS, ...filters};
-  const search = query.trim().toLowerCase();
-  const result = products.filter(product =>
-    (category === 'all' || product.category === category) &&
-    (quality === 'All qualities' || product.quality === quality) &&
-    (!team || product.team === team) &&
-    (!search || `${product.name} ${product.team || ''}`.toLowerCase().includes(search))
-  );
+  const {category, quality, query, team, sort, type, retro, size} = {...DEFAULT_FILTERS, ...filters};
+  const search = (query || '').trim().toLowerCase();
+  const result = products.filter(product => {
+    const pType = product.productType || 'jersey';
+    return (category === 'all' || product.category === category) &&
+      (quality === 'All qualities' || product.quality === quality) &&
+      (!team || product.team === team) &&
+      (type === 'all' || type === undefined || pType === type) &&
+      (retro === false || retro === undefined || String(retro) === 'false' || product.retro === true) &&
+      (size === 'all' || size === undefined || (product.stock && product.stock[size] > 0)) &&
+      (!search || `${product.name} ${product.team || ''}`.toLowerCase().includes(search));
+  });
   if (sort === 'low' || sort === 'high') result.sort((a, b) => (a.price - b.price) * (sort === 'low' ? 1 : -1));
   return result;
 }

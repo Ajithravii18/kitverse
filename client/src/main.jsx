@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Storefront from './pages/Storefront.jsx';
+import Shop from './pages/Shop.jsx';
 import AdminLayout from './components/admin/AdminLayout.jsx';
 import AdminProducts from './pages/AdminProducts.jsx';
 import AdminOrders from './pages/AdminOrders.jsx';
@@ -14,6 +15,7 @@ function Root() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Storefront />} />
+        <Route path="/shop" element={<Shop />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/profile" element={<Profile />} />

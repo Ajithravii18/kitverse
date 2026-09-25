@@ -2,10 +2,16 @@ import {qualities, sizes} from './catalog.js';
 import {inStock, stockFor} from './inventory.js';
 
 export function isListedProduct(product) {
-  return Boolean(product && product.published !== false && typeof product.slug === 'string' && product.slug.trim() &&
-    typeof product.name === 'string' && product.name.trim() &&
-    qualities.includes(product.quality) && ['club', 'national'].includes(product.category) &&
-    Number.isFinite(product.price) && product.price >= 0 && inStock(product));
+  if (!product || product.published === false || typeof product.slug !== 'string' || !product.slug.trim() ||
+      typeof product.name !== 'string' || !product.name.trim() ||
+      !Number.isFinite(product.price) || product.price < 0 || !inStock(product)) {
+    return false;
+  }
+  const type = product.productType || 'jersey';
+  if (type === 'jersey') {
+    if (!qualities.includes(product.quality) || !['club', 'national'].includes(product.category)) return false;
+  }
+  return true;
 }
 function imageUrl(value) {
   if (typeof value !== 'string') return '/images/jersey-placeholder.svg';
@@ -16,6 +22,8 @@ function imageUrl(value) {
 export function publicProduct(product) {
   return {
     slug: product.slug, name: product.name, team: typeof product.team === 'string' ? product.team : '',
+    productType: product.productType || 'jersey',
+    retro: Boolean(product.retro),
     category: product.category, quality: product.quality, price: product.price,
     image: imageUrl(product.image),
     images: Array.isArray(product.images) ? product.images.filter(image => image && typeof image.url === 'string')

@@ -367,7 +367,8 @@ export function createApp({ databaseReady = () => false, hasDatabase = false, re
             const linePrice = product.price; 
             total += linePrice * item.qty;
             lines.push({
-              slug: product.slug, name: product.name, quality: product.quality, size: item.size,
+              slug: product.slug, name: product.name, productType: product.productType || 'jersey', 
+              quality: product.quality || '', size: item.size,
               price: linePrice, qty: item.qty
             });
           }

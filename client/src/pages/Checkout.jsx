@@ -276,7 +276,7 @@ export default function Checkout() {
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '4px' }}>{item.name}</div>
-                  <div style={{ fontSize: '12px', color: '#666', marginBottom: '2px' }}>{item.quality}</div>
+                  <div style={{ fontSize: '12px', color: '#666', marginBottom: '2px' }}>{item.quality || item.productType}</div>
                   <div style={{ fontSize: '12px', color: '#666' }}>Size: <strong>{item.size}</strong> &times; {item.qty}</div>
                 </div>
                 <div style={{ fontWeight: 'bold', fontSize: '14px' }}>
