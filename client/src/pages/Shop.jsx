@@ -37,14 +37,20 @@ export default function Shop() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const { cart, setCart, storageWarning } = useBag();
 
+  
   const type = params.get('type') || 'all';
   const category = params.get('category') || 'all';
   const quality = params.get('quality') || 'All qualities';
   const retro = params.get('retro') === 'true' ? true : false;
   const sort = params.get('sort') || 'featured';
+  const team = params.get('team') || 'all';
   const page = parseInt(params.get('page')) || 1;
 
-  useScrollReveal([products.length, page, type, category, quality, retro, sort]);
+  const clubTeams = [...new Set(products.filter(p => p.category === 'club' && p.team).map(p => p.team))].sort();
+  const nationalTeams = [...new Set(products.filter(p => p.category === 'national' && p.team).map(p => p.team))].sort();
+
+
+  useScrollReveal([products.length, page, type, category, quality, retro, sort, team]);
 
   useEffect(() => {
     fetch('/api/products')
@@ -58,22 +64,26 @@ export default function Shop() {
       .catch(() => setAuthCustomer(false));
   }, []);
 
-  const filters = { type, category, quality, retro, sort };
+  const filters = { type, category, quality, retro, sort, team: team === 'all' ? null : team };
   const filteredProducts = selectProducts(products, filters);
   const { items, totalPages, page: currentPage } = paginate(filteredProducts, page, 16);
 
-  const updateFilter = (key, value) => {
+  const updateFilters = (updates) => {
     const p = new URLSearchParams(params);
-    if (value === 'all' || value === 'All qualities' || value === false) {
-      p.delete(key);
-    } else {
-      p.set(key, value);
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === 'all' || value === 'All qualities' || value === false || value === null) {
+        p.delete(key);
+      } else {
+        p.set(key, value);
+      }
     }
     p.set('page', '1');
     setParams(p);
   };
 
-  const browse = (val) => updateFilter('category', val);
+  const updateFilter = (key, value) => updateFilters({ [key]: value });
+
+  const browse = (val) => updateFilters({ category: val, team: 'all' });
   const clearFilters = () => setParams(new URLSearchParams());
 
   return (
@@ -130,13 +140,31 @@ export default function Shop() {
 
             <div style={{ marginBottom: '50px' }}>
               <div className="eyebrow" style={{ marginBottom: '20px', color: '#6f726a' }}>Team Category</div>
-              <nav style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'flex-start' }}>
+              <nav style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'flex-start', marginBottom: '25px' }}>
                 {[{ label: 'All', val: 'all' }, { label: 'Club', val: 'club' }, { label: 'National', val: 'national' }].map(t => (
-                  <button key={t.val} onClick={() => updateFilter('category', t.val)} style={{ background: 'none', border: 'none', color: category === t.val ? 'var(--lime)' : '#a1a39f', fontWeight: category === t.val ? '700' : '400', cursor: 'pointer', padding: 0, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em', transition: 'color 0.2s ease' }}>
+                  <button key={t.val} onClick={() => updateFilters({ category: t.val, team: 'all' })} style={{ background: 'none', border: 'none', color: category === t.val ? 'var(--lime)' : '#a1a39f', fontWeight: category === t.val ? '700' : '400', cursor: 'pointer', padding: 0, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em', transition: 'color 0.2s ease' }}>
                     {t.label}
                   </button>
                 ))}
               </nav>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <select className="select-dark" value={category === 'club' ? team : 'all'} onChange={e => {
+                  if (e.target.value === 'all') updateFilters({ team: 'all' });
+                  else updateFilters({ category: 'club', team: e.target.value });
+                }} style={{ width: '100%', padding: '12px', background: '#111', color: '#fff', border: '1px solid #333', borderRadius: '4px', outline: 'none' }}>
+                  <option value="all">Select Club Team...</option>
+                  {clubTeams.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+
+                <select className="select-dark" value={category === 'national' ? team : 'all'} onChange={e => {
+                  if (e.target.value === 'all') updateFilters({ team: 'all' });
+                  else updateFilters({ category: 'national', team: e.target.value });
+                }} style={{ width: '100%', padding: '12px', background: '#111', color: '#fff', border: '1px solid #333', borderRadius: '4px', outline: 'none' }}>
+                  <option value="all">Select National Team...</option>
+                  {nationalTeams.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
             </div>
 
             <div style={{ marginBottom: '50px' }}>
