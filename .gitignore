@@ -1,0 +1,6 @@
+node_modules/
+.env
+client/dist/
+.sites-runtime/
+*.tar.gz
+artifacts/

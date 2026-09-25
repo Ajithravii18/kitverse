@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="700" viewBox="0 0 600 700">
+  <rect width="600" height="700" fill="#eceee7"/>
+  <path d="m225 160-95 60 45 95 45-25v220h160V290l45 25 45-95-95-60c-10 45-140 45-150 0Z" fill="#d7ddce" stroke="#78826b" stroke-width="4"/>
+  <text x="300" y="565" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" fill="#454d3c">PRODUCT PHOTO COMING SOON</text>
+  <text x="300" y="600" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#606957">Placeholder · Not a depiction of this jersey</text>
+</svg>
