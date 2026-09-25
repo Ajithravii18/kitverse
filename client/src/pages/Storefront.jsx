@@ -615,7 +615,7 @@ function App() {
           </div>
           <div className="bestsellers-sub-wrap">
             <p className="bestsellers-sub">Complete your kit.</p>
-            <Link to={`/shop?type=${type}`} className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Track Pants</Link>
+            <Link to="/shop?type=track-pants" className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Track Pants</Link>
           </div>
         </div>
         {products.filter(p => p.productType === 'track-pants').length === 0 ? (
@@ -639,7 +639,7 @@ function App() {
           </div>
           <div className="bestsellers-sub-wrap">
             <p className="bestsellers-sub">Complete your kit.</p>
-            <Link to={`/shop?type=${type}`} className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Shorts</Link>
+            <Link to="/shop?type=shorts" className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Shorts</Link>
           </div>
         </div>
         {products.filter(p => p.productType === 'shorts').length === 0 ? (
@@ -663,7 +663,7 @@ function App() {
           </div>
           <div className="bestsellers-sub-wrap">
             <p className="bestsellers-sub">Complete your kit.</p>
-            <Link to={`/shop?type=${type}`} className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Collar T-Shirts</Link>
+            <Link to="/shop?type=collar-tshirt" className="primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>Shop Collar T-Shirts</Link>
           </div>
         </div>
         {products.filter(p => p.productType === 'collar-tshirt').length === 0 ? (
