@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import '../style.css';
+import '../animations.css';
 import { ProductCard } from '../components/shop/ProductCard.jsx';
 import ProductDetailModal from '../components/ProductDetailModal.jsx';
 import Modal from '../components/Modal.jsx';
 import useBag from '../useBag.js';
+import useScrollReveal from '../useScrollReveal.js';
 import { money } from '../format.js';
 import { qualities, sizes } from '../../../shared/catalog.js';
 import { selectProducts, paginate } from '../../../shared/storefront.js';
@@ -19,19 +22,21 @@ export default function Shop() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const { cart, setCart } = useBag();
 
-  useEffect(() => {
-    fetch('/api/products')
-      .then(r => r.json())
-      .then(d => { setProducts(d.products || []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
-
   const type = params.get('type') || 'all';
   const category = params.get('category') || 'all';
   const quality = params.get('quality') || 'All qualities';
   const retro = params.get('retro') === 'true' ? true : false;
   const sort = params.get('sort') || 'featured';
   const page = parseInt(params.get('page')) || 1;
+
+  useScrollReveal([products.length, page, type, category, quality, retro, sort]);
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then(r => r.json())
+      .then(d => { setProducts(d.products || []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
 
   const filters = { type, category, quality, retro, sort };
   const filteredProducts = selectProducts(products, filters);
