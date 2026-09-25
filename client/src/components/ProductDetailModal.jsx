@@ -42,7 +42,7 @@ export default function ProductDetailModal({product, products = [], onSelectRela
         {images.length > 1 && <div className="detail-thumbs-rail" role="group" aria-label="Product photographs">
           {images.map((image, index) => <button type="button" key={image.url + index} className={`detail-thumb-btn ${activeIdx === index ? 'active' : ''}`}
             aria-label={`View ${image.label}`} aria-pressed={activeIdx === index} onClick={() => {setActiveIdx(index); setZoomed(false);}}>
-            <ProductImage src={image.url} alt="" className="thumb-img-frame" /><span className="thumb-label">{image.label}</span>
+            <ProductImage src={image.url} alt="" className="thumb-img-frame" />
           </button>)}
         </div>}
       </div>
@@ -61,7 +61,8 @@ export default function ProductDetailModal({product, products = [], onSelectRela
             <div className="detail-size-chips">{sizes.map(size => <button key={size} type="button"
               className={`size-chip ${selectedSize === size ? 'active' : ''}`} disabled={remaining(size) < 1}
               aria-pressed={selectedSize === size} onClick={() => {setSelectedSize(size); setError('');}}>
-              <span className="chip-name">{size}</span><span className="chip-status">{remaining(size) ? `${remaining(size)} available` : 'Unavailable'}</span>
+              <span className="chip-name" style={{ textDecoration: remaining(size) === 0 ? 'line-through' : 'none' }}>{size} {remaining(size) === 0 && <span style={{ color: '#ff4d4f', marginLeft: '4px' }}>&times;</span>}</span>
+                {remaining(size) > 0 && remaining(size) < 5 && <span className="chip-status" style={{ color: '#d97706' }}>Low stock</span>}
             </button>)}</div>
           </fieldset>
           <button type="button" className="detail-size-chart-btn" onClick={() => setShowSizeGuide(true)}>Sizing guide</button>
