@@ -106,13 +106,13 @@ export default function Shop() {
         </div>
       </header>
 
-      <div className="shop-layout" style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', margin: '0 auto', maxWidth: '1440px' }}>
+      <div className="shop-layout" style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)', color: 'var(--ink)', margin: '0 auto', maxWidth: '1440px' }}>
         {/* Desktop Sidebar */}
-        <aside className="shop-sidebar" style={{ width: '280px', padding: '60px 40px', borderRight: '1px solid var(--border)' }}>
+        <aside className="shop-sidebar" style={{ width: '280px', padding: '60px 40px', borderRight: '1px solid #d9dcd3' }}>
           <div style={{ position: 'sticky', top: '100px' }}>
             
             <div style={{ marginBottom: '50px' }}>
-              <div className="eyebrow" style={{ marginBottom: '20px', color: '#888' }}>Product Type</div>
+              <div className="eyebrow" style={{ marginBottom: '20px', color: 'var(--muted)' }}>Product Type</div>
               <nav style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'flex-start' }}>
                 {[
                   { label: 'All Products', val: 'all' },
@@ -121,7 +121,7 @@ export default function Shop() {
                   { label: 'Track Pants', val: 'track-pants' },
                   { label: 'Collar T-Shirts', val: 'collar-tshirt' }
                 ].map(t => (
-                  <button key={t.val} onClick={() => updateFilter('type', t.val)} style={{ background: 'none', border: 'none', color: type === t.val ? 'var(--lime)' : 'var(--text)', fontWeight: type === t.val ? '700' : '400', cursor: 'pointer', padding: 0, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <button key={t.val} onClick={() => updateFilter('type', t.val)} style={{ background: 'none', border: 'none', color: type === t.val ? 'var(--ink)' : 'var(--muted)', fontWeight: type === t.val ? '700' : '400', cursor: 'pointer', padding: 0, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     {t.label}
                   </button>
                 ))}
@@ -129,10 +129,10 @@ export default function Shop() {
             </div>
 
             <div style={{ marginBottom: '50px' }}>
-              <div className="eyebrow" style={{ marginBottom: '20px', color: '#888' }}>Team Category</div>
+              <div className="eyebrow" style={{ marginBottom: '20px', color: 'var(--muted)' }}>Team Category</div>
               <nav style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'flex-start' }}>
                 {[{ label: 'All', val: 'all' }, { label: 'Club', val: 'club' }, { label: 'National', val: 'national' }].map(t => (
-                  <button key={t.val} onClick={() => updateFilter('category', t.val)} style={{ background: 'none', border: 'none', color: category === t.val ? 'var(--lime)' : 'var(--text)', fontWeight: category === t.val ? '700' : '400', cursor: 'pointer', padding: 0, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <button key={t.val} onClick={() => updateFilter('category', t.val)} style={{ background: 'none', border: 'none', color: category === t.val ? 'var(--ink)' : 'var(--muted)', fontWeight: category === t.val ? '700' : '400', cursor: 'pointer', padding: 0, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     {t.label}
                   </button>
                 ))}
@@ -140,36 +140,36 @@ export default function Shop() {
             </div>
 
             <div style={{ marginBottom: '50px' }}>
-              <div className="eyebrow" style={{ marginBottom: '20px', color: '#888' }}>Quality Tier</div>
-              <select className="select-dark" value={quality} onChange={e => updateFilter('quality', e.target.value)} style={{ width: '100%', padding: '12px', background: '#000', color: '#fff', border: '1px solid #333', borderRadius: '4px' }}>
+              <div className="eyebrow" style={{ marginBottom: '20px', color: 'var(--muted)' }}>Quality Tier</div>
+              <select className="select-dark" value={quality} onChange={e => updateFilter('quality', e.target.value)} style={{ width: '100%', padding: '12px', background: '#fff', color: 'var(--ink)', border: '1px solid #d9dcd3', borderRadius: '4px' }}>
                 <option value="All qualities">All Qualities</option>
                 {qualities.map(q => <option key={q} value={q}>{q}</option>)}
               </select>
             </div>
             
             <div style={{ marginBottom: '50px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em', color: retro ? 'var(--lime)' : 'var(--text)', fontWeight: retro ? '700' : '400' }}>
-                <input type="checkbox" checked={retro} onChange={e => updateFilter('retro', e.target.checked)} style={{ accentColor: 'var(--lime)', width: '16px', height: '16px' }} /> 
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em', color: retro ? 'var(--ink)' : 'var(--muted)', fontWeight: retro ? '700' : '400' }}>
+                <input type="checkbox" checked={retro} onChange={e => updateFilter('retro', e.target.checked)} style={{ accentColor: 'var(--ink)', width: '16px', height: '16px' }} /> 
                 Retro Styles
               </label>
             </div>
 
-            <button onClick={clearFilters} style={{ background: 'transparent', border: '1px solid #333', color: '#888', padding: '10px 20px', width: '100%', cursor: 'pointer', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}>Clear Filters</button>
+            <button onClick={clearFilters} style={{ background: 'transparent', border: '1px solid #333', color: 'var(--muted)', padding: '10px 20px', width: '100%', cursor: 'pointer', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}>Clear Filters</button>
           </div>
         </aside>
 
         <main style={{ flex: 1, padding: '40px 5%' }}>
-          <div className="shop-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', paddingBottom: '20px', borderBottom: '1px solid var(--border)' }}>
+          <div className="shop-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', paddingBottom: '20px', borderBottom: '1px solid #d9dcd3' }}>
             <div>
               <div className="eyebrow">THE CATALOGUE</div>
               <h1 style={{ fontSize: '42px', margin: 0, lineHeight: 1 }}>{type === 'all' ? 'All Products' : type.replace('-', ' ').toUpperCase()}</h1>
             </div>
             
             <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-              <span style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#888' }}>{filteredProducts.length} results</span>
-              <button className="mobile-filter-btn" onClick={() => setMobileFilterOpen(true)} style={{ padding: '8px 15px', background: 'var(--lime)', color: '#000', border: 'none', fontWeight: 'bold' }}>Filters</button>
+              <span style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)' }}>{filteredProducts.length} results</span>
+              <button className="mobile-filter-btn" onClick={() => setMobileFilterOpen(true)} style={{ padding: '8px 15px', background: 'var(--lime)', color: 'inherit', border: 'none', fontWeight: 'bold' }}>Filters</button>
               <div className="desktop-sort">
-                <select value={sort} onChange={e => updateFilter('sort', e.target.value)} style={{ padding: '8px 12px', background: 'transparent', color: 'var(--text)', border: '1px solid #333', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}>
+                <select value={sort} onChange={e => updateFilter('sort', e.target.value)} style={{ padding: '8px 12px', background: 'transparent', color: 'var(--ink)', border: '1px solid #d9dcd3', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}>
                   <option value="featured">Featured</option>
                   <option value="low">Price: Low to High</option>
                   <option value="high">Price: High to Low</option>
@@ -185,18 +185,18 @@ export default function Shop() {
               {items.map((p, i) => <ProductCard key={p.slug} p={p} pIdx={i} onOpen={setSelected} />)}
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '100px 20px', border: '1px dashed #333' }}>
+            <div style={{ textAlign: 'center', padding: '100px 20px', border: '1px dashed #d9dcd3' }}>
               <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>No products found</h3>
-              <p style={{ color: '#888' }}>Try clearing some filters to see more results.</p>
+              <p style={{ color: 'var(--muted)' }}>Try clearing some filters to see more results.</p>
               <button onClick={clearFilters} className="primary" style={{ marginTop: '30px', padding: '15px 30px' }}>Clear all filters</button>
             </div>
           )}
 
           {totalPages > 1 && (
             <div className="pagination" style={{display:'flex',justifyContent:'center',gap:'20px',marginTop:'80px',alignItems:'center'}}>
-              <button className="primary" style={{minHeight:'44px',padding:'0 20px',background:currentPage===1?'#333':'var(--lime)',color:currentPage===1?'#888':'#000'}} disabled={currentPage === 1} onClick={() => {updateFilter('page', currentPage - 1); window.scrollTo({top:0,behavior:'smooth'})}}>Previous</button>
+              <button className="primary" style={{minHeight:'44px',padding:'0 20px',background:currentPage===1?'#ddd':'var(--lime)',color:currentPage===1?'#888':'inherit'}} disabled={currentPage === 1} onClick={() => {updateFilter('page', currentPage - 1); window.scrollTo({top:0,behavior:'smooth'})}}>Previous</button>
               <span style={{fontSize:'14px',fontWeight:'600',letterSpacing:'0.05em',textTransform:'uppercase'}}>Page {currentPage} of {totalPages}</span>
-              <button className="primary" style={{minHeight:'44px',padding:'0 20px',background:currentPage===totalPages?'#333':'var(--lime)',color:currentPage===totalPages?'#888':'#000'}} disabled={currentPage === totalPages} onClick={() => {updateFilter('page', currentPage + 1); window.scrollTo({top:0,behavior:'smooth'})}}>Next</button>
+              <button className="primary" style={{minHeight:'44px',padding:'0 20px',background:currentPage===totalPages?'#ddd':'var(--lime)',color:currentPage===totalPages?'#888':'inherit'}} disabled={currentPage === totalPages} onClick={() => {updateFilter('page', currentPage + 1); window.scrollTo({top:0,behavior:'smooth'})}}>Next</button>
             </div>
           )}
         </main>
@@ -260,7 +260,7 @@ export default function Shop() {
             <h2 style={{ fontSize: '24px', marginBottom: '30px' }}>Filters & Sort</h2>
             
             <div className="eyebrow" style={{ marginTop: '20px', marginBottom: '10px' }}>Sort By</div>
-            <select value={sort} onChange={e => updateFilter('sort', e.target.value)} style={{ width: '100%', padding: '15px', background: '#111', color: '#fff', border: '1px solid #333' }}>
+            <select value={sort} onChange={e => updateFilter('sort', e.target.value)} style={{ width: '100%', padding: '15px', background: '#fff', color: 'var(--ink)', border: '1px solid #d9dcd3' }}>
               <option value="featured">Featured</option>
               <option value="low">Price: Low to High</option>
               <option value="high">Price: High to Low</option>
@@ -276,7 +276,7 @@ export default function Shop() {
                 { label: 'Collar T-Shirts', val: 'collar-tshirt' }
               ].map(t => (
                 <label key={t.val} style={{ display: 'flex', alignItems: 'center', gap: '15px', fontSize: '16px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  <input type="radio" checked={type === t.val} onChange={() => updateFilter('type', t.val)} style={{ width: '20px', height: '20px', accentColor: 'var(--lime)' }} /> {t.label}
+                  <input type="radio" checked={type === t.val} onChange={() => updateFilter('type', t.val)} style={{ width: '20px', height: '20px', accentColor: 'var(--ink)' }} /> {t.label}
                 </label>
               ))}
             </div>
@@ -285,26 +285,26 @@ export default function Shop() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
               {[{ label: 'All', val: 'all' }, { label: 'Club', val: 'club' }, { label: 'National', val: 'national' }].map(t => (
                 <label key={t.val} style={{ display: 'flex', alignItems: 'center', gap: '15px', fontSize: '16px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  <input type="radio" checked={category === t.val} onChange={() => updateFilter('category', t.val)} style={{ width: '20px', height: '20px', accentColor: 'var(--lime)' }} /> {t.label}
+                  <input type="radio" checked={category === t.val} onChange={() => updateFilter('category', t.val)} style={{ width: '20px', height: '20px', accentColor: 'var(--ink)' }} /> {t.label}
                 </label>
               ))}
             </div>
 
             <div className="eyebrow" style={{ marginTop: '40px', marginBottom: '10px' }}>Quality</div>
-            <select value={quality} onChange={e => updateFilter('quality', e.target.value)} style={{ width: '100%', padding: '15px', background: '#111', color: '#fff', border: '1px solid #333' }}>
+            <select value={quality} onChange={e => updateFilter('quality', e.target.value)} style={{ width: '100%', padding: '15px', background: '#fff', color: 'var(--ink)', border: '1px solid #d9dcd3' }}>
               <option value="All qualities">All Qualities</option>
               {qualities.map(q => <option key={q} value={q}>{q}</option>)}
             </select>
 
             <div style={{ marginTop: '40px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '15px', fontWeight: 'bold', fontSize: '16px', textTransform: 'uppercase', letterSpacing: '0.05em', color: retro ? 'var(--lime)' : '#fff' }}>
-                <input type="checkbox" checked={retro} onChange={e => updateFilter('retro', e.target.checked)} style={{ width: '20px', height: '20px', accentColor: 'var(--lime)' }} /> Retro Styles
+              <label style={{ display: 'flex', alignItems: 'center', gap: '15px', fontWeight: 'bold', fontSize: '16px', textTransform: 'uppercase', letterSpacing: '0.05em', color: retro ? 'var(--ink)' : 'var(--muted)' }}>
+                <input type="checkbox" checked={retro} onChange={e => updateFilter('retro', e.target.checked)} style={{ width: '20px', height: '20px', accentColor: 'var(--ink)' }} /> Retro Styles
               </label>
             </div>
 
             <div style={{ display: 'flex', gap: '10px', marginTop: '50px' }}>
-              <button onClick={() => setMobileFilterOpen(false)} style={{ flex: 1, padding: '15px', background: 'var(--lime)', color: '#000', border: 'none', fontWeight: 'bold', textTransform: 'uppercase' }}>Apply</button>
-              <button onClick={clearFilters} style={{ flex: 1, padding: '15px', background: 'transparent', color: '#fff', border: '1px solid #333', textTransform: 'uppercase' }}>Clear</button>
+              <button onClick={() => setMobileFilterOpen(false)} style={{ flex: 1, padding: '15px', background: 'var(--lime)', color: 'inherit', border: 'none', fontWeight: 'bold', textTransform: 'uppercase' }}>Apply</button>
+              <button onClick={clearFilters} style={{ flex: 1, padding: '15px', background: 'transparent', color: 'var(--ink)', border: '1px solid #d9dcd3', textTransform: 'uppercase' }}>Clear</button>
             </div>
           </div>
         </Modal>
@@ -384,13 +384,7 @@ export default function Shop() {
           .desktop-sort { display: none !important; }
           .shop-sidebar { display: none !important; }
         }
-        select option {
-          background: #111;
-          color: #fff;
-        }
-        .select-dark:focus {
-          outline: 1px solid var(--lime);
-        }
+        
       `}} />
     </>
   );
