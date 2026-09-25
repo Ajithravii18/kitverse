@@ -52,6 +52,10 @@ export default function AdminProducts() {
       images: validImages
     };
     
+    if (payload.category === '') delete payload.category;
+    if (payload.quality === '') delete payload.quality;
+    if (payload.team === '') delete payload.team;
+    
     const isNew = !products.find(p => p._id === editing._id);
     const url = isNew ? '/api/admin/products' : `/api/admin/products/${editing.slug}`;
     const method = isNew ? 'POST' : 'PUT';
