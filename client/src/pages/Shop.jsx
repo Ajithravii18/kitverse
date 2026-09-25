@@ -193,7 +193,7 @@ export default function Shop() {
               <h1 style={{ fontSize: '42px', margin: 0, lineHeight: 1 }}>{type === 'all' ? 'All Products' : type.replace('-', ' ').toUpperCase()}</h1>
             </div>
             
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <div className="shop-header-controls" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
               <span style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)' }}>{filteredProducts.length} results</span>
               <button className="mobile-filter-btn" onClick={() => setMobileFilterOpen(true)} style={{ padding: '8px 15px', background: 'var(--lime)', color: 'inherit', border: 'none', fontWeight: 'bold' }}>Filters</button>
               <div className="desktop-sort">
@@ -411,6 +411,11 @@ export default function Shop() {
         @media (max-width: 767px) {
           .desktop-sort { display: none !important; }
           .shop-sidebar { display: none !important; }
+          .shop-header-row { flex-direction: column; align-items: flex-start !important; gap: 20px; }
+          .shop-header-row h1 { font-size: 32px !important; }
+          .shop-header-controls { width: 100%; justify-content: space-between; }
+          .pagination { gap: 10px !important; flex-wrap: wrap; }
+          .pagination button { min-width: auto; padding: 0 15px !important; }
         }
         
       `}} />
