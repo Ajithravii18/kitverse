@@ -68,7 +68,7 @@ export default function ProductDetailModal({product, products = [], onSelectRela
           <button type="button" className="detail-size-chart-btn" onClick={() => setShowSizeGuide(true)}>Sizing guide</button>
           {demo && <p className="detail-note">Sample inventory. Bag quantities do not reserve stock.</p>}
           {error && <p role="alert">{error}</p>}
-          <button className="detail-submit-btn" type="submit" disabled={!selectedSize || remaining(selectedSize) < 1}>Add to matchday bag <span>+</span></button>
+          <button className="detail-submit-btn" type="submit" disabled={!selectedSize || remaining(selectedSize) < 1}>Add to cart <span>+</span></button>
         </form>
       </div>
     </div>

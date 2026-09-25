@@ -362,7 +362,7 @@ export default function Shop() {
           onAdd={(prod, chosenSize) => {
             setCart(addItem(cart, prod, chosenSize));
             setSelected(null);
-            setToast('Added to your matchday bag');
+            setToast('Added to cart');
           }}
           cart={cart}
           demo={false}
@@ -371,7 +371,7 @@ export default function Shop() {
 
       {bag && (
         <Modal label="Shopping bag" onClose={() => setBag(false)}>
-          <h2>Your matchday bag.</h2>
+          <h2>Your cart.</h2>
           {cart.length ? cart.map(x => (
             <div className="cart-row" key={x.key}>
               <div>

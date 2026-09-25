@@ -744,13 +744,13 @@ function App() {
         onAdd={(prod, chosenSize) => {
           setCart(addItem(cart, prod, chosenSize));
           setSelected(null);
-          setToast('Added to your matchday bag');
+          setToast('Added to cart');
         }}
         cart={cart}
         demo={demo}
       />
     )}
-    {bag&&<Modal label="Shopping bag" onClose={()=>setBag(false)}><h2>Your matchday bag.</h2>{cart.length?cart.map(x=><div className="cart-row" key={x.key}><div><p>{x.name}</p><small>{x.quality} · {x.size}</small><p>{money(x.price*x.qty)}</p></div><div className="quantity"><button aria-label={`Decrease ${x.name} quantity`} onClick={()=>quantity(x.key,-1)}>−</button><span>{x.qty}</span><button disabled={x.qty>=stockFor(products.find(p=>p.slug===x.slug),x.size)} aria-label={`Increase ${x.name} quantity`} onClick={()=>quantity(x.key,1)}>+</button></div></div>):<p>Your bag is waiting for its first jersey.</p>}{cart.length>0&&<div className="total"><span>Subtotal</span><span>{money(cart.reduce((n,x)=>n+x.price*x.qty,0))}</span></div>}{storageWarning && <p role="status">{storageWarning}</p>}<div style={{display:'flex',gap:'10px',marginTop:'20px'}}><Link to="/checkout" className="primary" style={{flex:1,textAlign:'center',textDecoration:'none',padding:'15px'}}>Checkout</Link><button className="secondary" style={{flex:1}} onClick={()=>setBag(false)}>Keep exploring</button></div></Modal>}
+    {bag&&<Modal label="Shopping bag" onClose={()=>setBag(false)}><h2>Your cart.</h2>{cart.length?cart.map(x=><div className="cart-row" key={x.key}><div><p>{x.name}</p><small>{x.quality} · {x.size}</small><p>{money(x.price*x.qty)}</p></div><div className="quantity"><button aria-label={`Decrease ${x.name} quantity`} onClick={()=>quantity(x.key,-1)}>−</button><span>{x.qty}</span><button disabled={x.qty>=stockFor(products.find(p=>p.slug===x.slug),x.size)} aria-label={`Increase ${x.name} quantity`} onClick={()=>quantity(x.key,1)}>+</button></div></div>):<p>Your bag is waiting for its first jersey.</p>}{cart.length>0&&<div className="total"><span>Subtotal</span><span>{money(cart.reduce((n,x)=>n+x.price*x.qty,0))}</span></div>}{storageWarning && <p role="status">{storageWarning}</p>}<div style={{display:'flex',gap:'10px',marginTop:'20px'}}><Link to="/checkout" className="primary" style={{flex:1,textAlign:'center',textDecoration:'none',padding:'15px'}}>Checkout</Link><button className="secondary" style={{flex:1}} onClick={()=>setBag(false)}>Keep exploring</button></div></Modal>}
     {info && <Modal label={info} onClose={() => setInfo(null)}><h2>{info}</h2><p>{
       info === 'Sizing Guide' ? 'Measure a well-fitting shirt across the chest and from shoulder to hem. Product-specific measurements will be published before ordering opens.' :
       info === 'Shipping & Returns' ? 'Orders are not open yet. Delivery areas, shipping charges and return terms will be published before checkout is enabled.' :
