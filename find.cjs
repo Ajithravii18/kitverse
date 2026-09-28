@@ -1,0 +1,1 @@
+const fs=require('fs');const c=fs.readFileSync('client/src/pages/Storefront.jsx','utf8');const i=c.indexOf('<section id="filter-index"'); const j=c.indexOf('</section>', i); console.log(c.substring(j-20, j+20));

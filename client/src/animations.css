@@ -209,3 +209,16 @@ section.reveal {
 .loading-pulse { animation: shieldFlip 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite; color: #c1ff38; }
 
 
+
+/* PAMIDOR-STYLE HOVER DIMMING */
+.pamidor-list:hover > .pamidor-item {
+  opacity: 0.3;
+  transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.pamidor-list > .pamidor-item:hover {
+  opacity: 1;
+}
+.pamidor-item {
+  transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+

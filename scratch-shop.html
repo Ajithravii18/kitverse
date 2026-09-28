@@ -1,0 +1,912 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_standard" name="shell-type">
+<title>KITVERSE — Editorial Football Archive &amp; Matchday Atelier</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@500;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-surface-variant": "#474832",
+        "surface-bright": "#fcf8f9",
+        "outline-variant": "#c8c8ab",
+        "surface-variant": "#e5e2e3",
+        "surface-container-lowest": "#ffffff",
+        "secondary-fixed": "#ffdad4",
+        "surface-tint": "#5d6300",
+        "primary-fixed": "#dfed00",
+        "tertiary": "#2240ff",
+        "surface-container-low": "#f6f3f4",
+        "inverse-on-surface": "#f3f0f1",
+        "on-error-container": "#93000a",
+        "error-container": "#ffdad6",
+        "surface": "#fcf8f9",
+        "surface-container": "#f0edee",
+        "on-tertiary-fixed": "#000c61",
+        "on-primary-container": "#697000",
+        "on-secondary-fixed": "#400200",
+        "on-background": "#1c1b1c",
+        "primary-fixed-dim": "#c3d000",
+        "surface-container-highest": "#e5e2e3",
+        "outline": "#78795f",
+        "background": "#fcf8f9",
+        "on-tertiary": "#ffffff",
+        "on-tertiary-fixed-variant": "#0026d6",
+        "on-primary-fixed-variant": "#454a00",
+        "tertiary-container": "#ecebff",
+        "on-secondary-fixed-variant": "#910900",
+        "on-surface": "#1c1b1c",
+        "inverse-primary": "#c3d000",
+        "inverse-surface": "#313031",
+        "error": "#ba1a1a",
+        "on-primary": "#ffffff",
+        "secondary-fixed-dim": "#ffb4a7",
+        "secondary-container": "#e81400",
+        "tertiary-fixed": "#dfe0ff",
+        "on-secondary": "#ffffff",
+        "on-error": "#ffffff",
+        "primary-container": "#e9f800",
+        "primary": "#5d6300",
+        "on-primary-fixed": "#1b1d00",
+        "surface-container-high": "#ebe7e8",
+        "tertiary-fixed-dim": "#bcc2ff",
+        "on-secondary-container": "#fffbff",
+        "secondary": "#b90e00",
+        "on-tertiary-container": "#3c54ff",
+        "surface-dim": "#dcd9da"
+      },
+      borderRadius: {
+        "DEFAULT": "0.15rem",
+        "lg": "0.35rem",
+        "xl": "0.5rem",
+        "full": "9999px"
+      },
+      spacing: {
+        "gutter-desktop": "1.25rem",
+        "space-lg": "1.25rem",
+        "margin-desktop": "2rem",
+        "gutter": "0.875rem",
+        "space-md": "0.875rem",
+        "margin": "0.875rem",
+        "space-2xl": "2.75rem",
+        "space-xs": "0.25rem",
+        "space-3xl": "3.5rem",
+        "space-sm": "0.5rem",
+        "space-xl": "1.75rem"
+      },
+      fontFamily: {
+        "headline-md": ["Syne", "sans-serif"],
+        "price-currency": ["Space Mono", "monospace"],
+        "body-lg": ["Space Mono", "monospace"],
+        "label-mono-bold": ["Space Mono", "monospace"],
+        "headline-lg-mobile": ["Syne", "sans-serif"],
+        "body-md": ["Space Mono", "monospace"],
+        "display-xl": ["Syne", "sans-serif"],
+        "display-xl-mobile": ["Syne", "sans-serif"],
+        "label-technical": ["Space Mono", "monospace"],
+        "headline-sm": ["Syne", "sans-serif"],
+        "headline-lg": ["Syne", "sans-serif"],
+        "body-sm": ["Space Mono", "monospace"],
+        "title-editorial": ["Syne", "sans-serif"]
+      }
+    }
+  }
+}
+</script>
+<style>
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #fcf8f9;
+    color: #1c1b1c;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+::-webkit-scrollbar { display: none; }
+
+/* Scroll Reveal Utilities */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-init.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger Children */
+.stagger-group > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stagger-group.is-revealed > *:nth-child(1) { transition-delay: 40ms; opacity: 1; transform: translateY(0); }
+.stagger-group.is-revealed > *:nth-child(2) { transition-delay: 80ms; opacity: 1; transform: translateY(0); }
+.stagger-group.is-revealed > *:nth-child(3) { transition-delay: 120ms; opacity: 1; transform: translateY(0); }
+.stagger-group.is-revealed > *:nth-child(4) { transition-delay: 160ms; opacity: 1; transform: translateY(0); }
+.stagger-group.is-revealed > *:nth-child(5) { transition-delay: 200ms; opacity: 1; transform: translateY(0); }
+.stagger-group.is-revealed > *:nth-child(6) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
+.stagger-group.is-revealed > *:nth-child(7) { transition-delay: 280ms; opacity: 1; transform: translateY(0); }
+.stagger-group.is-revealed > *:nth-child(8) { transition-delay: 320ms; opacity: 1; transform: translateY(0); }
+.stagger-group.is-revealed > *:nth-child(n+9) { transition-delay: 360ms; opacity: 1; transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init, .stagger-group > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+</style>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-black">
+<!-- HEADER / TICKER -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/15 shadow-sm">
+<!-- Technical Top Bar -->
+<div class="w-full bg-black text-white px-4 md:px-margin-desktop py-1 border-b border-white/10">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase tracking-widest leading-none">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container inline-block animate-ping"></span>
+<span class="font-bold text-white tracking-widest">LIVE ATELIER // DISPATCH ACTIVE</span>
+</div>
+<span class="hidden md:inline text-white/40">|</span>
+<span class="hidden md:inline text-white/70">KV-2025-04 // MATCHDAY EDITORIAL</span>
+<span class="hidden lg:inline text-white/40">|</span>
+<span class="hidden lg:inline text-primary-container font-bold">PALAKKAD &amp; DELHI HUB [48-72H EXPEDITE]</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden sm:inline text-white/60">53.4808° N, 2.2426° W</span>
+<div class="flex items-center gap-1 bg-white/15 px-2 py-0.5 border border-white/20 text-white">
+<span class="material-symbols-outlined text-[11px] text-primary-container">currency_rupee</span>
+<span class="font-bold font-price-currency text-[10px]">INR [₹]</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Nav Bar -->
+<div class="w-full px-4 md:px-margin-desktop py-2.5 flex items-center justify-between gap-space-md bg-white">
+<div class="flex items-center gap-space-xl">
+<a class="flex flex-col group select-none" href="#">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-[22px] font-bold uppercase text-black tracking-tight leading-none group-hover:text-primary transition-colors">+ KITVERSE</span>
+<span class="w-2 h-2 bg-primary-container border border-black inline-block"></span>
+</div>
+<span class="font-label-technical text-[8.5px] text-on-surface-variant tracking-widest uppercase mt-0.5">ATELIER DE FOOTBALL // EST. 2024</span>
+</a>
+<nav class="hidden lg:flex items-center gap-0.5">
+<a class="flex items-center gap-1.5 px-2.5 py-1 text-black bg-primary-container border border-black font-label-mono-bold text-[11px] uppercase tracking-wider hover:-translate-y-0.5 transition-all" href="#selection">
+<span class="w-1.5 h-1.5 rounded-full bg-black inline-block"></span>
+<span class="">26/27 KITS</span>
+</a>
+<a class="px-2.5 py-1 text-black hover:bg-surface-container font-label-mono-bold text-[11px] uppercase tracking-wider transition-colors" href="#filter-index">CATEGORIES</a>
+<a class="px-2.5 py-1 text-black hover:bg-surface-container font-label-mono-bold text-[11px] uppercase tracking-wider transition-colors" href="#clubs">TEAMS</a>
+<a class="px-2.5 py-1 text-black hover:bg-surface-container font-label-mono-bold text-[11px] uppercase tracking-wider transition-colors" href="#shorts">SHORTS</a>
+<a class="px-2.5 py-1 text-black hover:bg-surface-container font-label-mono-bold text-[11px] uppercase tracking-wider transition-colors" href="#track-pants">TRACK PANTS</a>
+<a class="px-2.5 py-1 text-black hover:bg-surface-container font-label-mono-bold text-[11px] uppercase tracking-wider transition-colors" href="#tiers">KNOW YOUR KIT</a>
+<a class="px-2.5 py-1 text-black hover:bg-surface-container font-label-mono-bold text-[11px] uppercase tracking-wider transition-colors" href="#community-reviews">REVIEWS</a>
+</nav>
+</div>
+<div class="flex items-center gap-2">
+<button class="hidden md:flex items-center gap-2 px-2.5 py-1.5 bg-surface-container hover:bg-surface-container-high border border-black/15 text-on-surface-variant hover:text-black font-label-technical text-[10px] uppercase tracking-wider transition-colors">
+<span class="material-symbols-outlined text-[14px] text-black">search</span>
+<span class="">SEARCH ARCHIVE</span>
+<span class="px-1 py-0.2 bg-white border border-black/15 font-bold text-[9px] text-black">⌘K</span>
+</button>
+<a class="group flex items-center bg-primary-container hover:bg-black text-black hover:text-white border border-black transition-all duration-200 select-none shadow-sm active:scale-95 hover:-translate-y-0.5" href="#selection">
+<div class="flex items-center gap-1.5 px-2.5 py-1.5 border-r border-black group-hover:border-white/30">
+<span class="material-symbols-outlined text-[16px]">shopping_bag</span>
+<span class="font-label-mono-bold text-[11px] uppercase tracking-wider font-extrabold">BAG</span>
+</div>
+<div class="px-2 py-1.5 font-price-currency text-[11px] font-bold group-hover:bg-primary-container group-hover:text-black flex items-center gap-1">
+<span class="">(02)</span>
+<span class="hidden sm:inline">· ₹2,098</span>
+</div>
+</a>
+<button class="w-8 h-8 border border-black/20 hover:border-black hover:bg-black hover:text-white text-black flex items-center justify-center transition-colors bg-white" title="Atelier Member Account">
+<span class="material-symbols-outlined text-[16px]">person</span>
+</button>
+</div>
+</div>
+</header>
+<main class="w-full pt-[82px] bg-surface"><div class="flex flex-col w-full">
+<!-- Top Marquee & Index Header -->
+<section class="w-full bg-surface-container-low px-4 md:px-margin-desktop py-space-xl border-b border-black/10">
+<div class="flex flex-col gap-space-sm max-w-7xl mx-auto">
+<div class="flex flex-wrap items-center justify-between gap-2 font-label-technical text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-container inline-block border border-black/40"></span>
+<span class="">INDEX ARCHIVE // 2024–2027 SPECIMENS</span>
+<span class="opacity-40">/</span>
+<span class="text-on-surface font-semibold">53.4888° N, 2.2426° W</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="bg-surface px-2 py-0.5 border border-black/15 font-price-currency text-[10px] text-on-surface">STOCK BATCH: KV-IN-889</span>
+<span class="text-primary font-bold">ALL SIZES VERIFIED</span>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md pt-space-xs">
+<div>
+<span class="font-label-technical text-[10px] tracking-widest text-primary font-bold uppercase block mb-1">THE CATALOGUE // ATELIER RUN</span>
+<h1 class="font-display-xl text-headline-lg lg:text-display-xl uppercase text-on-surface tracking-tighter leading-none m-0">ALL PRODUCTS.</h1>
+</div>
+<div class="flex flex-col items-start lg:items-end gap-1">
+<span class="font-label-mono-bold text-label-mono-bold uppercase tracking-widest text-on-surface">40 RESULTS // SPECIMEN INVENTORY</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-md lg:text-right">OEM weaves, high-density crest embroidery, match-issue chassis, and archival terrace track pants.</p>
+</div>
+</div>
+<!-- Quick Capsule Filter Strips -->
+<div class="flex items-center gap-1.5 overflow-x-auto pt-space-md scrollbar-none">
+<button class="px-3 py-1.5 bg-black text-white font-label-mono-bold text-[11px] uppercase tracking-wider shrink-0 transition-transform active:scale-95">ALL (40)</button>
+<button class="px-3 py-1.5 bg-white hover:bg-surface-container text-on-surface border border-black/15 font-label-mono-bold text-[11px] uppercase tracking-wider shrink-0 transition-colors">JERSEYS (28)</button>
+<button class="px-3 py-1.5 bg-white hover:bg-surface-container text-on-surface border border-black/15 font-label-mono-bold text-[11px] uppercase tracking-wider shrink-0 transition-colors">SHORTS (6)</button>
+<button class="px-3 py-1.5 bg-white hover:bg-surface-container text-on-surface border border-black/15 font-label-mono-bold text-[11px] uppercase tracking-wider shrink-0 transition-colors">TRACK PANTS (4)</button>
+<button class="px-3 py-1.5 bg-white hover:bg-surface-container text-on-surface border border-black/15 font-label-mono-bold text-[11px] uppercase tracking-wider shrink-0 transition-colors">COLLAR TEES (2)</button>
+<div class="ml-auto hidden xl:flex items-center gap-2 font-label-technical text-[10px]">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="">DOMESTIC EXPRESS DISPATCH ACTIVE</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Catalogue Layout (Swiss Dossier Sidebar + Product Grid) -->
+<section class="w-full px-4 md:px-margin-desktop py-space-lg">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg max-w-7xl mx-auto">
+<!-- Architectural Filter Sidebar -->
+<aside class="lg:col-span-3 flex flex-col gap-space-lg">
+<div class="bg-black text-white p-space-md flex flex-col gap-space-md border border-black sticky top-[90px]">
+<div class="flex items-center justify-between border-b border-white/20 pb-2">
+<span class="font-headline-sm text-title-editorial uppercase text-white font-bold">FILTERS // 01</span>
+<button class="font-label-technical text-white/60 hover:text-primary-container uppercase text-[9px] underline" id="reset-filters">RESET ALL</button>
+</div>
+<!-- Product Type Category -->
+<div class="flex flex-col gap-2">
+<span class="font-label-mono-bold text-label-mono-bold uppercase text-white/80">PRODUCT TYPE</span>
+<div class="flex flex-col gap-1 text-[11px] font-label-technical uppercase">
+<label class="flex items-center justify-between cursor-pointer py-1 px-1.5 bg-primary-container text-black font-bold">
+<span class="">ALL PRODUCTS</span>
+<span class="font-price-currency">40</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer py-1 px-1.5 text-white/80 hover:bg-white/10 transition-colors">
+<span class="">MATCH JERSEYS</span>
+<span class="font-price-currency text-white/50">28</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer py-1 px-1.5 text-white/80 hover:bg-white/10 transition-colors">
+<span class="">BOTTOMS &amp; SHORTS</span>
+<span class="font-price-currency text-white/50">06</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer py-1 px-1.5 text-white/80 hover:bg-white/10 transition-colors">
+<span class="">TRACK PANTS</span>
+<span class="font-price-currency text-white/50">04</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer py-1 px-1.5 text-white/80 hover:bg-white/10 transition-colors">
+<span class="">COLLAR T-SHIRTS</span>
+<span class="font-price-currency text-white/50">02</span>
+</label>
+</div>
+</div>
+<!-- Team Category -->
+<div class="flex flex-col gap-2 border-t border-white/15 pt-3">
+<span class="font-label-mono-bold text-label-mono-bold uppercase text-white/80">TEAM CATEGORY</span>
+<div class="grid grid-cols-3 gap-1 font-label-technical text-[10px] uppercase">
+<button class="py-1 bg-white text-black font-bold">ALL</button>
+<button class="py-1 border border-white/30 text-white hover:bg-white/10">CLUB</button>
+<button class="py-1 border border-white/30 text-white hover:bg-white/10">INTL</button>
+</div>
+<div class="flex flex-col gap-2 mt-2">
+<label class="font-label-technical text-[9px] uppercase text-white/60">SELECT CLUB SPECIMEN</label>
+<select class="w-full bg-white/10 text-white border border-white/30 font-label-technical text-[10px] px-2 py-1.5 uppercase focus:outline-none focus:border-primary-container">
+<option class="bg-black text-white" value="">ALL CLUBS [24 TEAMS]</option>
+<option class="bg-black text-white" value="rma">REAL MADRID CF</option>
+<option class="bg-black text-white" value="liv">LIVERPOOL FC</option>
+<option class="bg-black text-white" value="che">CHELSEA FC</option>
+<option class="bg-black text-white" value="bar">FC BARCELONA</option>
+<option class="bg-black text-white" value="ars">ARSENAL FC</option>
+<option class="bg-black text-white" value="acm">AC MILAN</option>
+<option class="bg-black text-white" value="mcfc">MANCHESTER CITY</option>
+</select>
+</div>
+<div class="flex flex-col gap-2 mt-1">
+<label class="font-label-technical text-[9px] uppercase text-white/60">SELECT NATIONAL SQUAD</label>
+<select class="w-full bg-white/10 text-white border border-white/30 font-label-technical text-[10px] px-2 py-1.5 uppercase focus:outline-none focus:border-primary-container">
+<option class="bg-black text-white" value="">ALL NATIONAL TEAMS</option>
+<option class="bg-black text-white" value="arg">ARGENTINA (AFA)</option>
+<option class="bg-black text-white" value="bra">BRAZIL (CBF)</option>
+<option class="bg-black text-white" value="por">PORTUGAL (FPF)</option>
+<option class="bg-black text-white" value="fra">FRANCE (FFF)</option>
+<option class="bg-black text-white" value="ger">GERMANY (DFB)</option>
+<option class="bg-black text-white" value="eng">ENGLAND (FA)</option>
+</select>
+</div>
+</div>
+<!-- Quality Tier Filters -->
+<div class="flex flex-col gap-2 border-t border-white/15 pt-3">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-bold text-label-mono-bold uppercase text-white/80">QUALITY TIER</span>
+<a class="font-label-technical text-[9px] text-primary-container underline uppercase" href="#tiers">TIER MATRIX</a>
+</div>
+<div class="flex flex-col gap-1.5 text-[10px] font-label-technical uppercase">
+<label class="flex items-center gap-2 cursor-pointer text-white/90 hover:text-white">
+<input checked="" class="rounded-none text-black focus:ring-0 w-3.5 h-3.5 bg-transparent border-white/40" type="checkbox">
+<span class="flex-1">EMBROIDERY SPEC</span>
+<span class="text-primary-container font-price-currency font-bold">₹799</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer text-white/90 hover:text-white">
+<input checked="" class="rounded-none text-black focus:ring-0 w-3.5 h-3.5 bg-transparent border-white/40" type="checkbox">
+<span class="flex-1">FIRST COPY + SHORTS</span>
+<span class="text-primary-container font-price-currency font-bold">₹1,099</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer text-white/90 hover:text-white">
+<input checked="" class="rounded-none text-black focus:ring-0 w-3.5 h-3.5 bg-transparent border-white/40" type="checkbox">
+<span class="flex-1">MASTER COPY</span>
+<span class="text-primary-container font-price-currency font-bold">₹1,249</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer text-white/90 hover:text-white">
+<input checked="" class="rounded-none text-black focus:ring-0 w-3.5 h-3.5 bg-transparent border-white/40" type="checkbox">
+<span class="flex-1">PLAYER SPEC / CHASSIS</span>
+<span class="text-primary-container font-price-currency font-bold">₹1,499</span>
+</label>
+</div>
+</div>
+<!-- Retro Styles Checkbox -->
+<div class="flex items-center justify-between border-t border-white/15 pt-3">
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="rounded-none text-black focus:ring-0 w-3.5 h-3.5 bg-transparent border-white/40" type="checkbox">
+<span class="font-label-mono-bold text-[11px] uppercase text-white">RETRO ARCHIVE KITS</span>
+</label>
+<span class="bg-primary text-black font-label-technical text-[9px] px-1 font-bold">90S-00S</span>
+</div>
+<!-- Stock Status Badge -->
+
+</div>
+</aside>
+<!-- Main Specimen Section & 4-Column Editorial Grid -->
+<div class="lg:col-span-9 flex flex-col gap-space-md">
+<!-- Sorting and Results Bar -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm bg-white p-space-sm border border-black/15 shadow-sm">
+<div class="flex items-center gap-2">
+<span class="font-label-technical text-[10px] uppercase text-on-surface-variant">ACTIVE SELECTION:</span>
+<span class="px-2 py-0.5 bg-surface-container font-label-mono-bold text-[10px] uppercase">ALL EDITIONS (40)</span>
+<span class="hidden sm:inline-block px-2 py-0.5 bg-surface-container font-label-mono-bold text-[10px] uppercase">INR [₹]</span>
+</div>
+<div class="flex items-center gap-3">
+<label class="font-label-technical text-[10px] uppercase text-on-surface-variant">ORDER BY:</label>
+<select class="bg-surface border border-black/20 font-label-mono-bold text-[11px] uppercase px-2 py-1 text-on-surface focus:outline-none focus:border-black">
+<option>FEATURED CURATION</option>
+<option>PRICE: LOW TO HIGH (₹799 → ₹1,499)</option>
+<option>PRICE: HIGH TO LOW (₹1,499 → ₹799)</option>
+<option>SEASON: 26/27 ADVANCE</option>
+<option>SEASON: RETRO HERITAGE</option>
+</select>
+</div>
+</div>
+<!-- The 4-Column Product Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-space-md">
+<!-- Card 01: Liverpool Home -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">CLUB SPECIMEN</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">LFC-23-H</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Official Liverpool FC red home football jersey with iconic sponsor and crest laid flat in high fashion studio editorial lighting on neutral stone background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByuHAmuqqWP-WHXU_sdUN78XgrhmiuEDG7Zs08NouOv7pbxrSkfuRvLYoSw2Pfagxp8dtfE0x8v-74Yo3lA6a2F56tjfWkMAdCczTwh630gyhXgoK4OQZY2HpO3vDOzo3-mnnGR6ace4YUKMVkUrD9H2BCyWkZiCMPMXeaq03u1cCyvJRcIPvfBpVixg8cm8JdB9HL-t6c6X7FLC7-Suk6gVG7Wc_peX6VxSlTyJjP9Lukr2BQpOXI4Q">
+<div class="absolute bottom-2 left-2 right-2 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/95 px-2 py-1 border border-black/15">
+<span class="font-label-technical text-[8px] uppercase">100% RECYCLED POLY</span>
+<span class="font-label-technical text-[8px] text-primary font-bold uppercase">IN STOCK</span>
+</div>
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">EMBROIDERY SPEC</span>
+<span class="text-secondary font-bold">LIVERPOOL</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Liverpool Home 23/24</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">M · L · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹799</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 02: Real Madrid Home Set -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">KIT + SHORTS</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">RMA-24-SET</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Official Real Madrid crisp white 24/25 home jersey complete set with matching white shorts displayed in clean architectural studio setup" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDth5-Ieo-9O9l2U-vh0Vt_3RSTJiDGdzmkwyCNxSzmMMsLtIMIH59VfQ3COyFMG0bAJNcJYuI7vtgeK7G3Ue9VUVeEPpdt1GaOdVGMSUYyMIn6hibGHFFxjLWyJ_koXB3zvqK_cHJpG1WWCTIz_KHPKCcdHXzR6Hcdx5reLe-p6Beu1vnAU8QRqh-CMbkBv1QWE5qsFD9RYliTyS656QnOSiKGzIlvuhtuHBsjn_PZc5pCqMkCMOoKmw">
+<div class="absolute bottom-2 left-2 right-2 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/95 px-2 py-1 border border-black/15">
+<span class="font-label-technical text-[8px] uppercase">DUAL PIECE COMBO</span>
+<span class="font-label-technical text-[8px] text-primary font-bold uppercase">EXPEDITE</span>
+</div>
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">FIRST COPY + SHORTS</span>
+<span class="text-primary font-bold">REAL MADRID</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Real Madrid Home 24/25</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">L · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹1,099</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 03: Chelsea Home -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-tertiary text-white font-label-technical text-[9px] uppercase tracking-wider z-10">MASTER COPY</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">CFC-25-H</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Official Chelsea blue graphic wave home kit football jersey isolated in sharp studio light with detailed heat sealed crest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMpbzxLKQsEptH2TTLcxptFjFE2Z5SxqLXax8qhEpq2tL-hmALNHw7-iPKtBBPUem4xjsHmIezUVhquGuWYuSR5pQlWx6uZ8JBnMJ7AHoIPGFG90x48tCmm8AeNlcPtfgAc49yphnW8kNxmp6Fs7Qj9OktWS59e25LAfZxCAg_9wUlquyoPYB6y1d_Q9WjtrdlPNZ4onp88WJDWHdK7ygQk_cbQdriWYuyS5uFbbmxLWjNCpRLb_8J1Q">
+<div class="absolute bottom-2 left-2 right-2 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/95 px-2 py-1 border border-black/15">
+<span class="font-label-technical text-[8px] uppercase">AEROREADY VENT</span>
+<span class="font-label-technical text-[8px] text-primary font-bold uppercase">PREMIUM</span>
+</div>
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">MASTER COPY SPEC</span>
+<span class="text-tertiary font-bold">CHELSEA</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Chelsea Home 25/26</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">S · M · L · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹1,249</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 04: Argentina Home -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-primary-container font-label-technical text-[9px] uppercase tracking-wider z-10">PLAYER CHASSIS</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">AFA-24-PLY</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Argentina national football team home jersey classic sky blue and white stripes with gold 3-star federation crest and gold badges flat studio shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGB3KmUzBtWR9mYLN0JaQBaINBdRdVBNOKGvqRPIZE012SPLIeFUHQq419AbyDRYAZNdQXOaymGbm23VbfX0-qb5BQKfxwDQqzUOI5pv3XajW8WPju4-n7H4KudijGLpvYgrrQDQ6b_QZm6xST-Wh_ndt5mKYE6kLrpKThaTfGNBmbWW9UtlMsSsBbTnNySH9jpP0M7ngOJZUuNLyl3gFfzyOOfGeGtZVB_JMzd4ypMAQ7HoWKSgCygA">
+<div class="absolute bottom-2 left-2 right-2 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/95 px-2 py-1 border border-black/15">
+<span class="font-label-technical text-[8px] uppercase">HEAT.RDY PRO CUT</span>
+<span class="font-label-technical text-[8px] text-primary font-bold uppercase">MATCH SPEC</span>
+</div>
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">PLAYER EDITION</span>
+<span class="text-tertiary font-bold">ARGENTINA</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Argentina Home 2024</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">S · M · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹1,499</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 05: FC Barcelona 26/27 Away -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">ADVANCE 26/27</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">FCB-26-AWY</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="FC Barcelona black and volt away kit football jersey advance design with TPU silicone crest high fashion shoot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkaP5HGIWZkyyayUl-y6qAC0AAHiOEb2a5_8_FEgKkk2aV_dD0hsH5u_5QyJ8Lt3zOyPLK9t6Z-8BfWo2fQQB3HS_WeB-3efwiP3aRHWizPUITDCvf_3Ru94k3-Yb_rvxg6vfDt8gcsgJCBftPSbdAY2SGcD9-Ux_M5MtuC138msZv69dAuQ1If3wVPfPYHZCgNs0A3Kt_zUsyN2B5rOkFUOLMMm82R5Fj_TiVTuRS6IeWTgHpKZNCyw">
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">PLAYER SPEC</span>
+<span class="text-secondary font-bold">BARCELONA</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">FC Barcelona 26/27 Away</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">S · M · L · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹1,399</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 06: AC Milan Home 24/25 -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">SERIE A ENILIVE</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">ACM-24-H</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="AC Milan iconic red and black vertical striped football shirt with white sponsor print flat garment presentation on architectural concrete background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsFiXSzF2KGDP9IoCKDU-8s7xONN06ey-kSsfzyRb0txdEHNY3Ad707Z-Gjvwr_-PDu_KNEvrIu6AkK5LdTcgyJ1qmVbxDmoNj1YM1Pjn1o1vSzCJEBtbvQ5hy5GedZ60SiBQpLXUVAsKOikOY1EWBvVFDzQaFd7hu_T8mrpwkLj6noSPaG66mWWU9Rao6PvjckMcCD_9RPHRzBzaN2L5L0vQUTWUg0GnOGZ8nYC4ui04h1vhqOVGIUg">
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">MASTER COPY</span>
+<span class="text-secondary font-bold">AC MILAN</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">AC Milan Home 24/25</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">M · L · XL · XXL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹1,249</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 07: Arsenal FC Home 24/25 -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">EMBROIDERY SPEC</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">ARS-24-H</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Arsenal FC red body with white sleeves home jersey featuring classic cannon club badge neatly folded on clean backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfz3xzrv8JljM9fx2A7L1Qlb54smSGGkBu6xiq4TlVZsnXwZB7zT3RMfTuMgRR4iWnL__mxovHCn_FI98F_F1L0k7KVyGxgAGDNvTxsJLdiEwrjx2C3cEVuhmEi8KxcH8l0W8VLVK7Ffwebac7S6Rq26_XIBw-PvBq-RXza5m1pYxv0VkyTIU69zWNu3DzV22cfQwgB3f3epA5SBmw0YznVA05oS-ut_WkOCJ3s_qFJ0BB4bpj4ENfaQ">
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">EMBROIDERY</span>
+<span class="text-secondary font-bold">ARSENAL</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Arsenal FC 24/25 Home</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">S · M · L · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹799</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 08: Brazil Home 2024 -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-primary-container font-label-technical text-[9px] uppercase tracking-wider z-10">PLAYER SPEC</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">CBF-24-PLY</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Brazil canary yellow football jersey with intricate jaguar jacquard knit pattern and green accents in studio catalog setup" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfcmnWzi8CDkCEpiAVHaMv0MmN8yV38B6_vp8RDuTrUo_5wnf_O_khgWN9gafT4iIlyYuE7rwazB-iFEWD8WEmCVUTxLxaIUoCr6PpKXLwZ-3Nu8cBxhsrrQU_A__o292T4NfvGvaJWl53cU3oWXXsjZuK8NCHk-_S9RJI2ebQqLkoxS90BbZSCC9ooZHt26iP6r_JTl0QlzM6vuzfmHTRpo1ICW2F2FZ3j9DvLdTfyTnVygTYpAJD4A">
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">PLAYER EDITION</span>
+<span class="text-primary font-bold">BRAZIL</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Brazil Home 2024</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">M · L · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹1,499</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+</div>
+<!-- Specimen Technical Highlight Dossier Spread (Editorial Magazine Break) -->
+
+<!-- Second Product Row (Bottoms, Retro & Training) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-space-md">
+<!-- Card 09: Barcelona Shorts -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">PERFORMANCE SHORT</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">FCB-SH-01</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="FC Barcelona technical navy football shorts with woven crest and internal drawstring displayed flat on light stone ground" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA-ncEGnf_40-sGORccC8KV1X1WeNZFT9Dt0smloixOp4NIrnFpsxrv1EzueQsmtTmqHAta1I8wgZjHkmCgkOhm8xBWLc3tQEGZR2Cg5x_Bo67lwvvuQWXRGA2SlnQw_13EDhGJTXeXQCsIjEHlXejTZcLk9SpU2tk04qtaBpBTZ8TwhHZkUKybtO0Ope2qYB6iQgFkTdmiGWzaseegYxb6bohKtZJYwK1Bx6uInJnHonIsZfGq1UTIQ">
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">BOTTOMS ONLY</span>
+<span class="text-secondary font-bold">BARCELONA</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Barcelona 26/27 Shorts</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">S · M · L · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹250</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 10: Track Pants -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">TRAINING PANTS</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">TRK-BLK-04</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Athletic black taper track pants with iconic side stripes and zippered ankle cuffs flat studio product shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn2XCImUt4_lgor69BA1fOxtOrDVoMgeH1dJ-yFo3H_BNY9ZIYBxVeN-G3i3fpL1lr_dIXZSpwk5neO9bt-OfwAgX6Ew-xSMM2D2d5hL0QubeugmS4DtdCP_0VHF5TuxzjJyC-uYPHgRIlihLpNMTEd6fqhXoOH-yFL0tDDosHQEjXdozcApBIUez30Xo7G4MsysB9dQtq6MffU3j5UtrY2Jy7OiEc2epvh9o8fHtZqDQAmXvLQETGQw">
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">CRINKLE NYLON</span>
+<span class="text-primary font-bold">TRAINING</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Crinkle Track Pants</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">M · L · XL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹599</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 11: Real Madrid Retro 2002 -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">RETRO HERITAGE</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">RMA-02-UCL</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Classic vintage Real Madrid 2002 centenary white kit with navy collar and authentic retro flock print" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd87Zre9r-dylK6MNgheviO44yDYFc8EFhm7iyfFWzlpsv91joh0HRrbkz9jEEhWiYYORaRwFurbp6i2z2WlgUyGCFplO6Dbqdwu4jJi04e4veUJdS-FbtLk11Vqq7FxadazvGcVqzb7x8F-XLrhrhQoMKVpZQdKQ28C6acK53TULt4-UnHrkpo10mBC0c-m_rjmr80TpUchc4W2MheY8Se7iNy7di_jYma9ahFhrPGaSUvxHZKjtO7A">
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">CENTENARY RETRO</span>
+<span class="text-primary font-bold">REAL MADRID</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Real Madrid 2002 Retro</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">S · M · L</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹1,249</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 12: Portugal Home 2024 -->
+<article class="group bg-white border border-black/15 flex flex-col justify-between hover:border-black transition-all">
+<div>
+<div class="relative bg-surface-container-low p-4 aspect-[4/5] flex items-center justify-center overflow-hidden border-b border-black/10">
+<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-black text-white font-label-technical text-[9px] uppercase tracking-wider z-10">INTL SQUAD</span>
+<span class="absolute top-2 right-2 font-label-technical text-[9px] text-on-surface-variant z-10">FPF-24-H</span>
+<img class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" data-alt="Portugal crimson red football shirt with green cuffs and national team crest on studio pedestal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQsNKEu1uF84_LpoL7BZ8ENI2o7cZMvrpIOMh-enSrCEDSgwFhB57HU-v7ssi5h3ipsSpBWNKH1eZ6-K_jXtUEsrdiQV_hApqaEqeBFPsUMFWZodfGpU3onco0Q6qTXUeNZcqw8yX2xCUh4T3unQdvR7shJ_BQuBm2DUc3133aF4dGfHQaWJxl0ep2fBvbIC2Al4esDmBj-KNgqkTJnBeGuwI_O9sntLuTHsoR7Xpz79VNkL-Y7zNzXA">
+</div>
+<div class="p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-technical text-[9px] uppercase">
+<span class="text-on-surface-variant">MASTER COPY</span>
+<span class="text-secondary font-bold">PORTUGAL</span>
+</div>
+<h2 class="font-headline-sm text-[16px] font-bold uppercase leading-tight text-on-surface">Portugal Home 2024</h2>
+<div class="flex items-center gap-1 font-label-technical text-[10px] text-on-surface-variant pt-0.5">
+<span class="">SIZES:</span>
+<span class="font-label-mono-bold text-black font-bold">M · L · XL · XXL</span>
+</div>
+</div>
+</div>
+<div class="p-3 pt-0 flex items-center justify-between gap-2 border-t border-black/5 mt-2">
+<span class="font-price-currency text-[15px] font-bold text-on-surface">₹1,249</span>
+<button class="px-2.5 py-1 bg-primary-container hover:bg-black hover:text-white border border-black font-label-mono-bold text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors">
+<span class="">QUICK BAG</span>
+<span class="material-symbols-outlined text-[13px]">add</span>
+</button>
+</div>
+</article>
+</div>
+<!-- Architectural Pagination Controls -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm pt-space-lg border-t border-black/15">
+<div class="font-label-technical text-[10px] text-on-surface-variant uppercase">
+            SHOWING 1–12 OF 40 SPECIMENS // ATELIER BATCH 01
+          </div>
+<div class="flex items-center gap-1 font-label-mono-bold text-[11px]">
+<button class="px-3 py-1.5 bg-surface-container text-on-surface-variant cursor-not-allowed uppercase border border-black/10">PREVIOUS</button>
+<button class="px-3 py-1.5 bg-black text-white uppercase border border-black">1</button>
+<button class="px-3 py-1.5 bg-white hover:bg-surface-container text-black uppercase border border-black/15">2</button>
+<button class="px-3 py-1.5 bg-white hover:bg-surface-container text-black uppercase border border-black/15">3</button>
+<span class="px-2 text-on-surface-variant font-price-currency text-xs">PAGE 1 OF 3</span>
+<button class="px-3 py-1.5 bg-primary-container hover:bg-black hover:text-white text-black uppercase border border-black transition-colors">NEXT</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Editorial Statement Banner (Matching Home Page Section) -->
+<section class="w-full bg-black text-white px-4 md:px-margin-desktop py-space-2xl mt-space-xl border-t border-black overflow-hidden relative">
+<div class="max-w-7xl mx-auto flex flex-col gap-space-md">
+<div class="flex items-center gap-2 font-label-technical text-primary-container text-[10px] uppercase tracking-widest">
+<span class="w-2 h-2 bg-primary-container"></span>
+<span class="">KITVERSE EDITORIAL // PALAKKAD &amp; DELHI STUDIOS</span>
+</div>
+<h2 class="font-display-xl text-headline-lg lg:text-display-xl uppercase tracking-tighter text-primary-container leading-none m-0">FIND YOUR COLOURS.</h2>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md pt-2 border-t border-white/20">
+<p class="font-body-md text-white/70 max-w-xl text-[13px] leading-relaxed">Explore club and national team jerseys. Club loyalty. National pride. One love for the terrace and the pitch. Guaranteed authentic weaves, express domestic dispatch across India.</p>
+<div class="flex items-center gap-2 font-label-technical text-[9px] uppercase text-white/50">
+<span class="">NO SCRIPT MARGINS</span>
+<span class="">·</span>
+<span class="">100% SPEC VERIFIED</span>
+<span class="">·</span>
+<span class="text-primary-container font-bold">SEE YOU ON MATCHDAY</span>
+</div>
+</div>
+</div>
+</section>
+</div></main>
+<!-- COMPACT EDITORIAL FOOTER -->
+<footer class="w-full bg-white text-black border-t border-black/20">
+<div class="w-full bg-black text-white px-4 md:px-margin-desktop py-2 font-label-technical text-[8.5px] uppercase tracking-widest flex flex-wrap justify-between items-center gap-2">
+<span class="">DELHI &amp; PALAKKAD CENTRAL DISPATCH ACTIVE</span>
+<span class="">ALL INDIA EXPRESS 48-72H // RAZORPAY 256-BIT ENCRYPTION</span>
+<span class="">© 2025 KITVERSE MAGAZINE ARCHIVE</span>
+</div>
+<div class="w-full px-4 md:px-margin-desktop py-space-xl flex flex-col gap-space-lg">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-space-md text-[11px] font-body-sm uppercase">
+<!-- Col 1 -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-mono-bold text-[12px] font-bold text-black border-b border-black pb-1">01. KITS</span>
+<a class="hover:underline text-on-surface-variant" href="#selection">26/27 Advance Cycle</a>
+<a class="hover:underline text-on-surface-variant" href="#selection">Matchday Jerseys</a>
+<a class="hover:underline text-on-surface-variant" href="#selection">Retro Heritage</a>
+<a class="hover:underline text-on-surface-variant" href="#selection">Full Box Sets</a>
+</div>
+<!-- Col 2 -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-mono-bold text-[12px] font-bold text-black border-b border-black pb-1">02. BOTTOMS</span>
+<a class="hover:underline text-on-surface-variant" href="#shorts">Performance Shorts</a>
+<a class="hover:underline text-on-surface-variant" href="#track-pants">Crinkle Track Pants</a>
+<a class="hover:underline text-on-surface-variant" href="#track-pants">Aeroready Runners</a>
+<a class="hover:underline text-on-surface-variant" href="#shorts">Sizing &amp; Inseam</a>
+</div>
+<!-- Col 3 -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-mono-bold text-[12px] font-bold text-black border-b border-black pb-1">03. CLUBS</span>
+<a class="hover:underline text-on-surface-variant" href="#clubs">Premier League</a>
+<a class="hover:underline text-on-surface-variant" href="#clubs">La Liga EA Sports</a>
+<a class="hover:underline text-on-surface-variant" href="#clubs">Serie A Enilive</a>
+<a class="hover:underline text-on-surface-variant" href="#clubs">National Federations</a>
+</div>
+<!-- Col 4 -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-mono-bold text-[12px] font-bold text-black border-b border-black pb-1">04. TIERS</span>
+<a class="hover:underline text-on-surface-variant" href="#tiers">Embroidery (₹799)</a>
+<a class="hover:underline text-on-surface-variant" href="#tiers">1st Copy + Shorts (₹1,099)</a>
+<a class="hover:underline text-on-surface-variant" href="#tiers">Master Copy (₹1,249)</a>
+<a class="hover:underline text-on-surface-variant" href="#tiers">Player Spec (₹1,499)</a>
+</div>
+<!-- Col 5 Newsletter -->
+<div class="flex flex-col gap-2 col-span-2 lg:col-span-1">
+<span class="font-label-mono-bold text-[12px] font-bold text-black border-b border-black pb-1">05. DISPATCH</span>
+<p class="font-label-technical text-[9px] text-on-surface-variant uppercase">SIGN UP FOR LIMITED 26/27 RELEASES</p>
+<div class="flex">
+<input class="w-full text-[10px] px-2 py-1 border border-black font-label-technical uppercase focus:outline-none focus:bg-primary-container" placeholder="YOUR EMAIL" type="email">
+<button class="bg-black text-white px-2 py-1 font-label-mono-bold text-[10px] uppercase">JOIN</button>
+</div>
+</div>
+</div>
+<!-- Bottom Bar -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-black/10 font-label-technical text-[9px] uppercase text-on-surface-variant">
+<span class="">KITVERSE ARCHIVE // EST. 2024 PALAKKAD &amp; DELHI</span>
+<a class="hover:text-black flex items-center gap-1 font-bold" href="#">
+<span class="">RETURN TO TOP</span>
+<span class="material-symbols-outlined text-[13px]">arrow_upward</span>
+</a>
+</div>
+</div>
+</footer>
+<!-- LIGHTWEIGHT SCROLL-REVEAL OBSERVER -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.1
+    };
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-init, .stagger-group').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Touch & Mouse drag for club track
+    const track = document.getElementById('club-carousel-track');
+    if (track) {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      track.addEventListener('mousedown', (e) => {
+        isDown = true;
+        track.style.cursor = 'grabbing';
+        startX = e.pageX - track.offsetLeft;
+        scrollLeft = track.scrollLeft;
+      });
+
+      track.addEventListener('mouseleave', () => {
+        isDown = false;
+        track.style.cursor = 'grab';
+      });
+
+      track.addEventListener('mouseup', () => {
+        isDown = false;
+        track.style.cursor = 'grab';
+      });
+
+      track.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - track.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        track.scrollLeft = scrollLeft - walk;
+      });
+    }
+  });
+</script>
+
+
+</body></html>
