@@ -203,10 +203,10 @@ section.reveal {
 
 @keyframes shieldFlip {
   0% { transform: perspective(400px) rotateY(0deg) scale(0.9); opacity: 0.6; }
-  50% { transform: perspective(400px) rotateY(180deg) scale(1.1); opacity: 1; filter: drop-shadow(0 0 12px #c1ff38); }
+  50% { transform: perspective(400px) rotateY(180deg) scale(1.1); opacity: 1; filter: drop-shadow(0 0 12px var(--brand-yellow)); }
   100% { transform: perspective(400px) rotateY(360deg) scale(0.9); opacity: 0.6; }
 }
-.loading-pulse { animation: shieldFlip 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite; color: #c1ff38; }
+.loading-pulse { animation: shieldFlip 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite; color: var(--brand-yellow); }
 
 
 

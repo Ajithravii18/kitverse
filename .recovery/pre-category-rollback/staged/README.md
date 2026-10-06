@@ -1,4 +1,4 @@
-# TERRACE — MERN jersey storefront
+# KITVERSE — MERN jersey storefront
 
 React + Vite frontend, Express/Node API, and MongoDB via Mongoose. Mobile-first design with four quality options, team/search filtering, price sorting, pagination, product selection, sizes and a locally saved shopping bag. Sample products and INR prices; order processing, payments and administration are not implemented.
 

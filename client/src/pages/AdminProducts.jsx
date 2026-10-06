@@ -6,17 +6,21 @@ const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(null);
   const [error, setError] = useState('');
+  const [editing, setEditing] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('name-asc');
+
 
   async function loadProducts() {
     setLoading(true);
     try {
       const r = await fetch('/api/admin/products');
       const data = await r.json();
+      if(!r.ok)throw new Error(data.error || 'Could not load products.');
       setProducts(data.products || []);
     } catch (e) {
-      console.error(e);
+      setError(e.message);
     } finally {
       setLoading(false);
     }
@@ -168,10 +172,26 @@ export default function AdminProducts() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1>Products Catalogue</h1>
+        <h1 className="text-2xl">Products Catalogue</h1>
         <button onClick={() => handleEdit(null)} style={{ padding: '10px 20px', background: 'var(--lime)', color: '#000', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}>+ Add Product</button>
       </div>
 
+      <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
+        <input 
+          type="text" 
+          placeholder="Search products by name or SKU..." 
+          value={searchTerm} 
+          onChange={e => setSearchTerm(e.target.value)} 
+          style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
+        />
+        <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}>
+          <option value="name-asc">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="price-asc">Price (Low to High)</option>
+          <option value="price-desc">Price (High to Low)</option>
+        </select>
+      </div>
+      {error && <p role="alert">{error} <button onClick={loadProducts}>Retry</button></p>}
       <div style={{ overflowX: 'auto', background: '#fff', borderRadius: '8px', border: '1px solid #eaeaea' }}>
         <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse', minWidth: '800px' }}>
           <thead>
@@ -186,7 +206,16 @@ export default function AdminProducts() {
             </tr>
           </thead>
           <tbody>
-            {products.map(p => (
+            {products
+              .filter(p => (p.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || (p.slug || '').toLowerCase().includes(searchTerm.toLowerCase()))
+              .sort((a, b) => {
+                if (sortBy === 'name-asc') return (a.name || '').localeCompare(b.name || '');
+                if (sortBy === 'name-desc') return (b.name || '').localeCompare(a.name || '');
+                if (sortBy === 'price-asc') return a.price - b.price;
+                if (sortBy === 'price-desc') return b.price - a.price;
+                return 0;
+              })
+              .map(p => (
               <tr key={p._id} style={{ borderBottom: '1px solid #eaeaea' }}>
                 <td style={{ padding: '12px' }}>
                   <img src={p.image || '/images/jersey-placeholder.svg'} alt={p.name} style={{ width: '40px', height: '40px', objectFit: 'contain', background: '#f5f5f5', borderRadius: '4px' }} />
@@ -220,3 +249,4 @@ export default function AdminProducts() {
     </div>
   );
 }
+

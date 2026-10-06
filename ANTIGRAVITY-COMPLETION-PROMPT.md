@@ -1,10 +1,10 @@
-# Antigravity completion prompt — TERRACE
+# Antigravity completion prompt — KITVERSE
 
 You are continuing an existing MERN football jersey store, not starting a new project. Inspect the current repository before changing anything, then implement the remaining work. Do not stop after a plan, a visual redesign, or a list of suggestions. Complete and verify the locally runnable store, and clearly separate code completion from external launch requirements.
 
 ## Preserve the product and business rules
 
-- Keep MongoDB, Express, React/Vite and Node.js. Preserve the TERRACE brand, black/lime palette, typography and mobile-first direction. Improve the existing design rather than replacing it with a generic template.
+- Keep MongoDB, Express, React/Vite and Node.js. Preserve the KITVERSE brand, black/lime palette, typography and mobile-first direction. Improve the existing design rather than replacing it with a generic template.
 - Sell both club and national-team jerseys. Keep both easy to find on desktop and mobile.
 - Each sellable listing/SKU has ONE actual quality, its own price, and stock for each size. Supported labels are Embroidery, First copy + shorts, Master copy and Player version. Never generate all four qualities for every jersey. If the same design exists in another quality, it is a separate stocked SKU. Do not restore “4 quality options” product messaging; remove the confusing hero quality-count statistic too.
 - Only verified inventory can be purchased. Stock is not unlimited, and adding to the bag does not reserve inventory. Zero-stock sizes must be unavailable.

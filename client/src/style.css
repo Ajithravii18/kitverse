@@ -2137,7 +2137,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
 
 @layer base {
-  html, body {
+  html, body { 
     margin: 0;
     padding: 0;
     background-color: #fcf8f9;
@@ -2186,3 +2186,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 @layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
 
+
+
+.cart-drawer{position:fixed;inset:0 0 0 auto;margin:0;height:100dvh;max-height:100dvh;width:min(450px,100%);max-width:100%;padding:0;border:0;background:var(--paper);color:var(--ink);overflow:hidden;}
+.cart-drawer[open]{display:flex;flex-direction:column;}
+.cart-drawer::backdrop{background:rgb(0 0 0 / .6);}
+.cart-drawer button:disabled{opacity:.4;cursor:not-allowed;}

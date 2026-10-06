@@ -11,7 +11,7 @@ export default function useScrollReveal(deps = []) {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReducedMotion) {
-      document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+      document.querySelectorAll('.reveal-init').forEach(el => el.classList.add('is-revealed'));
       return;
     }
 
@@ -19,7 +19,7 @@ export default function useScrollReveal(deps = []) {
       (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
+            entry.target.classList.add('is-revealed');
             obs.unobserve(entry.target);
           }
         });
@@ -29,7 +29,7 @@ export default function useScrollReveal(deps = []) {
 
     // Small delay so React has finished rendering new elements
     const timer = setTimeout(() => {
-      document.querySelectorAll('.reveal:not(.is-visible)').forEach(el => obs.observe(el));
+      document.querySelectorAll('.reveal-init:not(.is-revealed)').forEach(el => obs.observe(el));
     }, 80);
 
     return () => {

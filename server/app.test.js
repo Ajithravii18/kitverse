@@ -1,12 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createApp} from './app.js';
+import {createApp, isValidRazorpaySignature, REMEMBERED_SESSION_TTL_MS} from './app.js';
+import {createHmac} from 'node:crypto';
 import {addItem, changeQuantity, reconcileCart, inStock} from '../shared/inventory.js';
 import {selectProducts, paginate} from '../shared/storefront.js';
 async function request(options,path){const server=createApp(options).listen(0,'127.0.0.1');await new Promise(resolve=>server.once('listening',resolve));try{const response=await fetch(`http://127.0.0.1:${server.address().port}${path}`);return {status:response.status,data:await response.json()};}finally{await new Promise(resolve=>server.close(resolve))}}
 const club={slug:'club-shirt',name:'Club shirt',category:'club',quality:'Embroidery',price:799,stock:{S:0,M:2}};
 const national={slug:'national-shirt',name:'National shirt',category:'national',quality:'Player version',price:1499,stock:{L:1}};
 const database={hasDatabase:true,databaseReady:()=>true,readProducts:async()=>[club,national,{...club,slug:'sold-out',stock:{M:0}},{slug:'legacy',variants:[{quality:'Embroidery'}]}]};
+test('Razorpay payment signatures must match the order and payment ids', () => {
+ const orderId = 'order_123';
+ const paymentId = 'pay_456';
+ const secret = 'test-secret';
+ const signature = createHmac('sha256', secret).update(`${orderId}|${paymentId}`).digest('hex');
+ assert.equal(isValidRazorpaySignature(orderId, paymentId, signature, secret), true);
+ assert.equal(isValidRazorpaySignature(orderId, 'pay_other', signature, secret), false);
+ assert.equal(isValidRazorpaySignature(orderId, paymentId, `${signature}00`, secret), false);
+ assert.equal(isValidRazorpaySignature(orderId, paymentId, signature, ''), false);
+});
+test('remembered customer sessions expire after seven days', () => {
+ assert.equal(REMEMBERED_SESSION_TTL_MS, 7 * 24 * 60 * 60 * 1000);
+});
 test('catalogue lists actual qualities and national teams',async()=>{const {status,data}=await request({},'/api/products');assert.equal(status,200);assert.equal(data.demo,true);assert.ok(data.products.some(p=>p.category==='national'));assert.ok(data.products.every(p=>p.quality&&p.stock&&!p.variants));});
 test('database outage does not substitute demo inventory',async()=>{assert.equal((await request({hasDatabase:true},'/api/products')).status,503)});
 test('reject invalid quality and category',async()=>{assert.equal((await request({},'/api/products?quality=invalid')).status,400);assert.equal((await request({},'/api/products?category=invalid')).status,400)});

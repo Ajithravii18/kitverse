@@ -1,0 +1,10 @@
+.route-loader {min-height:100dvh;display:grid;place-items:center;padding:24px;background:#f7f8f4;color:#181a16;}
+.route-loader-content {width:min(240px,100%);text-align:center;}
+.route-loader-wordmark {display:inline-flex;align-items:center;gap:8px;font:800 28px/1.2 'Syne',sans-serif;letter-spacing:-.04em;white-space:nowrap;}
+.route-loader-wordmark > span {color:var(--brand-yellow-ink);}
+.route-loader-track {height:3px;margin:24px 0 16px;background:#d9dcd3;overflow:hidden;}
+.route-loader-track > span {display:block;width:45%;height:100%;background:var(--brand-yellow);animation:loader-travel 1.3s cubic-bezier(.45,0,.55,1) infinite;}
+.route-loader p {margin:0;font:11px/1.5 'Space Mono',monospace;color:#6f726a;}
+@keyframes loader-arrive {from {opacity:0;transform:translateY(6px);}to {opacity:1;transform:none;}}
+@keyframes loader-travel {from {transform:translateX(-105%);}to {transform:translateX(325%);}}
+@media(prefers-reduced-motion:reduce) {.route-loader-content,.route-loader-track > span {animation:none;}.route-loader-track > span {width:100%;}}

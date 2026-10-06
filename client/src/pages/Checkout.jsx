@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar.jsx';
+import ProductImage from '../components/ProductImage.jsx';
 import useBag from '../useBag.js';
+import { changeQuantity, stockFor } from '../../../shared/inventory.js';
 import { money } from '../format.js';
 import { useNavigate, Link } from 'react-router-dom';
+import CheckoutForm from '../components/checkout/CheckoutForm.jsx';
+import OrderSummary from '../components/checkout/OrderSummary.jsx';
+import Confirmation from '../components/checkout/Confirmation.jsx';
 
-const indianStates = [
-  "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", 
-  "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa", 
-  "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", 
-  "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", 
-  "Mizoram", "Nagaland", "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", 
-  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
-];
+function loadRazorpayScript() {
+  if(window.Razorpay)return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('The secure payment window could not be loaded. Please try again.'));
+    document.body.appendChild(script);
+  });
+}
+
 
 export default function Checkout() {
   const { cart, setCart, restore } = useBag();
@@ -29,298 +38,251 @@ export default function Checkout() {
     notes: ''
   });
   
+  const [authenticated, setAuthenticated] = useState(false);
+  const [products, setProducts] = useState([]);
   const [initializing, setInitializing] = useState(true);
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [submitting, setSubmitting] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
+  const [confirmation, setConfirmation] = useState(null);
   const [error, setError] = useState('');
+  const [discountCode, setDiscountCode] = useState('');
+  const [discountResult, setDiscountResult] = useState(null);
+  const [discountError, setDiscountError] = useState('');
+  const [applyingDiscount, setApplyingDiscount] = useState(false);
+  const [loadError,setLoadError]=useState(false);
+  const [retry,setRetry]=useState(0);
+  const [checkoutEnabled,setCheckoutEnabled]=useState(false);
+  const [pendingOrder,setPendingOrder]=useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Parallel fetch: check auth and load products
+    setInitializing(true);setLoadError(false);setError('');
     Promise.all([
-      fetch('/api/customer/me').then(r => r.json()),
-      fetch('/api/products').then(r => r.json())
+      fetch('/api/customer/me').then(r => r.ok ? r.json() : { authenticated: false }).catch(() => ({ authenticated: false })),
+      fetch('/api/products').then(async r => { if (!r.ok) throw new Error('Catalogue unavailable'); return r.json(); })
     ])
-    .then(([authData, prodData]) => {
-      if (!authData.authenticated) {
-        navigate('/auth?redirect=/checkout');
-        return;
-      }
+    .then(async ([authData, prodData]) => {
+      setAuthenticated(Boolean(authData.authenticated));
+      setCheckoutEnabled(Boolean(prodData.checkoutEnabled));
+      setProducts(prodData.products || []);
       restore(prodData.products || []);
       if (authData.savedAddresses && authData.savedAddresses.length > 0) {
         setSavedAddresses(authData.savedAddresses);
       }
+      try {
+        const saved=JSON.parse(sessionStorage.getItem('kitverse:pending-order') || 'null');
+        if(saved?.orderRef && authData.authenticated){
+          const response=await fetch('/api/orders/'+encodeURIComponent(saved.orderRef));
+          if(response.ok){
+            const order=await response.json();
+            if(['paid','review_required','partially_refunded','refunded'].includes(order.paymentStatus)){
+              setConfirmation({...order,confirmedAt:new Date().toISOString()});setCart([]);
+              sessionStorage.removeItem('kitverse:pending-order');
+            } else if(order.paymentStatus==='pending')setPendingOrder(order);
+            else sessionStorage.removeItem('kitverse:pending-order');
+          }
+        }
+      }catch{}
       setInitializing(false);
     })
-    .catch(err => {
-      setError('Failed to load checkout data');
-      setInitializing(false);
-    });
-  }, []);
+    .catch(() => {setError('Failed to load checkout data');setLoadError(true);setInitializing(false);});
+  }, [retry]);
 
-  const total = cart.reduce((n, x) => n + x.price * x.qty, 0);
+  const subtotal = cart.reduce((n, x) => n + x.price * x.qty, 0);
+  const shipping = subtotal >= 150000 ? 0 : 15000;
+  const total = subtotal; // For backward compatibility in this file where 'total' was used as subtotal
 
-  async function submit(e) {
-    e.preventDefault();
-    if (cart.length === 0) return;
-    setSubmitting(true);
-    setError('');
-
+  const handleApplyDiscount = async () => {
+    if (!discountCode.trim()) return;
+    setApplyingDiscount(true);
+    setDiscountError('');
+    setDiscountResult(null);
     try {
-      const res = await fetch('/api/orders', {
+      const res = await fetch('/api/checkout/validate-discount', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customer: formData, items: cart })
+        body: JSON.stringify({ code: discountCode, subtotal: total })
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to place order');
-      
-      if (data.razorpayKeyId && data.paymentIntentId) {
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.onload = () => {
-          const rzp = new window.Razorpay({
-            key: data.razorpayKeyId,
-            order_id: data.paymentIntentId,
-            name: 'KITVERSE',
-            description: 'Order ' + data.orderRef,
-            handler: function (response) {
-              setCart([]);
-              navigate('/?success=1');
-            },
-            prefill: {
-              name: `${formData.firstName} ${formData.lastName}`,
-              email: formData.email,
-              contact: formData.phone
-            },
-            theme: { color: '#000000' }
-          });
-          rzp.open();
-        };
-        document.body.appendChild(script);
-      } else {
-        setCart([]);
-        navigate('/?success=1');
-      }
+      if (!res.ok) throw new Error(data.error || 'Invalid code');
+      setDiscountResult(data);
     } catch (err) {
-      setError(err.message);
+      setDiscountError(err.message);
+    } finally {
+      setApplyingDiscount(false);
+    }
+  };
+
+  const discountAmount = discountResult ? discountResult.discountAmount : 0;
+  const finalTotal = Math.max(0, subtotal - discountAmount) + shipping;
+
+
+  async function confirmPayment(orderRef, paymentDetails, orderTotal) {
+    const response = await fetch('/api/orders/verify-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderRef, ...paymentDetails })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Payment verification is still processing.');
+    setCart([]);
+    setPendingOrder(null);
+    try { sessionStorage.removeItem('kitverse:checkout-draft');sessionStorage.removeItem('kitverse:pending-order');sessionStorage.removeItem('kitverse:checkout-key'); } catch {}
+    setConfirmation({
+      orderRef: data.orderRef,
+      paymentId: paymentDetails.razorpay_payment_id,
+      total: data.total ?? orderTotal,
+      paymentStatus: data.paymentStatus,
+      fulfilmentStatus: data.fulfilmentStatus,
+      confirmedAt: new Date().toISOString()
+    });
+  }
+
+  async function retryPaymentVerification() {
+    if (!confirmation?.paymentDetails) return;
+    const pending = confirmation;
+    setConfirmation({ ...pending, status: 'verifying', error: '' });
+    setSubmitting(true);
+    try {
+      await confirmPayment(pending.orderRef, pending.paymentDetails, pending.total);
+    } catch (verificationError) {
+      setConfirmation({ ...pending, status: 'verification_pending', error: verificationError.message });
     } finally {
       setSubmitting(false);
     }
+  }
+
+  async function launchPayment(data) {
+    await loadRazorpayScript();
+    const razorpay=new window.Razorpay({
+      key:data.razorpayKeyId,order_id:data.paymentIntentId,name:'KITVERSE',description:'Order '+data.orderRef,
+      handler:async paymentDetails=>{
+        const pending={orderRef:data.orderRef,paymentId:paymentDetails.razorpay_payment_id,paymentDetails,total:data.total,status:'verifying'};
+        setConfirmation(pending);
+        try{await confirmPayment(data.orderRef,paymentDetails,data.total);}
+        catch(error){setConfirmation({...pending,status:'verification_pending',error:error.message});}
+        finally{setSubmitting(false);}
+      },
+      modal:{ondismiss:()=>setSubmitting(false)},
+      prefill:{name:formData.firstName+' '+formData.lastName,email:formData.email,contact:formData.phone},theme:{color:'#181a16'}
+    });
+    razorpay.on('payment.failed',event=>{setError(event.error?.description || 'Payment failed. You can retry the same order.');setSubmitting(false);});
+    razorpay.open();
+  }
+  async function resumePayment(){setSubmitting(true);setError('');try{await launchPayment(pendingOrder);}catch(error){setError(error.message);setSubmitting(false);}}
+  async function cancelPending(){
+    setSubmitting(true);setError('');
+    try{
+      const response=await fetch('/api/orders/'+encodeURIComponent(pendingOrder.orderRef)+'/cancel',{method:'POST'});
+      const data=await response.json();if(!response.ok)throw new Error(data.error || 'Could not cancel.');
+      try{sessionStorage.removeItem('kitverse:pending-order');sessionStorage.removeItem('kitverse:checkout-key');}catch{}
+      setPendingOrder(null);setRetry(n=>n+1);
+    }catch(error){setError(error.message);}finally{setSubmitting(false);}
+  }
+  async function submit(event){
+    event.preventDefault();if(submitting || !cart.length)return;
+    if(!checkoutEnabled){setError('Payments are unavailable. Please try again later.');return;}
+    if(!authenticated){requireLogin();return;}
+    setSubmitting(true);setError('');
+    try{
+      await loadRazorpayScript();
+      const fingerprint=JSON.stringify({customer:formData,items:cart.map(({slug,size,qty})=>({slug,size,qty}))});
+      let retryKey;
+      try{const saved=JSON.parse(sessionStorage.getItem('kitverse:checkout-key') || 'null');if(saved?.fingerprint===fingerprint)retryKey=saved.key;}catch{}
+      retryKey ||= (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + '-' + Math.random().toString(36).substring(2));
+      try{sessionStorage.setItem('kitverse:checkout-key',JSON.stringify({fingerprint,key:retryKey}));}catch{}
+      const response=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':retryKey},body:JSON.stringify({customer:formData,items:cart,discountCode:discountResult ? discountResult.code : undefined})});
+      const data=await response.json();
+      if(response.status===401){requireLogin();return;}
+      if(!response.ok)throw new Error(data.error || 'Could not prepare checkout.');
+      setPendingOrder(data);
+      try{sessionStorage.setItem('kitverse:pending-order',JSON.stringify({orderRef:data.orderRef}));}catch{}
+      await launchPayment(data);
+    }catch(error){setError(error.message);setSubmitting(false);}
+  }
+
+  function requireLogin() {
+    try { sessionStorage.setItem('kitverse:checkout-draft', JSON.stringify(formData)); } catch {}
+    navigate('/login?redirect=/checkout');
+  }
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem('kitverse:checkout-draft') || 'null');
+      if (saved && typeof saved === 'object') setFormData(current => Object.fromEntries(Object.entries(current).map(([key, value]) => [key, typeof saved[key] === 'string' ? saved[key] : value])));
+    } catch {}
+  }, []);
+
+  function updateQuantity(key, delta) {
+    try { setCart(changeQuantity(cart, key, delta, products)); setError(''); }
+    catch (error) { setError(error.message); }
   }
 
   const handleUpdate = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
 
   if (initializing) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '100px', fontFamily: 'Inter, sans-serif' }}>
-        <div style={{ padding: '20px', background: '#000', color: '#c1ff38', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
-          Initializing Secure Checkout...
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center font-sans">
+        <div className="flex flex-col items-center gap-space-sm">
+          <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+          <span className="font-label-technical text-label-technical tracking-widest uppercase text-on-surface">INITIALIZING SECURE GATEWAY...</span>
         </div>
       </div>
     );
   }
 
-  if (orderComplete) {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', padding: '40px', fontFamily: 'Inter, sans-serif', textAlign: 'center' }}>
-        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#c1ff38', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '30px' }}>
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
-        <h1 style={{ fontSize: '36px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '15px' }}>Order Confirmed</h1>
-        <p style={{ fontSize: '16px', color: '#666', maxWidth: '400px', marginBottom: '40px', lineHeight: '1.6' }}>
-          Thank you for choosing KITVERSE. Your payment has been processed and your matchday kit is being prepared for dispatch.
-        </p>
-        <Link to="/profile" style={{ display: 'inline-block', background: '#000', color: '#fff', padding: '16px 32px', textDecoration: 'none', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Track Order in Profile</Link>
-      </div>
-    );
+  if (confirmation) {
+    return <Confirmation confirmation={confirmation} submitting={submitting} retryPaymentVerification={retryPaymentVerification} />;
   }
 
+  if(loadError)return <><Navbar/><main className="p-8"><p role="alert">{error}</p><button onClick={()=>setRetry(n=>n+1)}>Retry checkout</button></main></>;
+  if(pendingOrder)return <><Navbar/><main className="p-8 max-w-xl mx-auto"><h1>Resume your order</h1><p>{pendingOrder.orderRef} · {money(pendingOrder.total)}</p><p>Your existing payment can be retried without reserving more stock.</p>{error&&<p role="alert">{error}</p>}<button disabled={submitting} onClick={resumePayment} className="bg-black text-white p-3 my-4">Resume payment</button><button disabled={submitting} onClick={cancelPending} className="border p-3 m-4">Cancel unpaid order</button><Link to="/profile">View order history</Link></main></>;
   if (cart.length === 0) {
     return (
-      <div style={{ padding: '80px 40px', fontFamily: 'Inter, sans-serif', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '32px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '20px' }}>Your bag is empty.</h2>
-        <Link to="/" style={{ display: 'inline-block', background: '#c1ff38', color: '#000', padding: '12px 24px', textDecoration: 'none', fontWeight: 'bold', textTransform: 'uppercase' }}>Back to the kit room</Link>
+      <div className="min-h-screen bg-surface flex flex-col font-sans">
+        <Navbar />
+        <main className="pt-28 flex-1 flex flex-col items-center justify-center p-space-xl text-center">
+          <span className="material-symbols-outlined text-[64px] text-on-surface-variant mb-space-md">shopping_cart_off</span>
+          <h2 className="font-display-md text-display-md uppercase text-on-surface mb-space-sm">CART IS EMPTY</h2>
+          <p className="font-label-technical text-label-technical tracking-widest uppercase text-on-surface-variant mb-space-xl">YOUR ARCHIVE SELECTION HAS NO ITEMS.</p>
+          <Link to="/" className="bg-black text-white px-space-xl py-3 font-label-mono-bold text-[14px] tracking-widest uppercase hover:bg-black/80 transition-colors">
+            RETURN TO ARCHIVE
+          </Link>
+        </main>
       </div>
     );
   }
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', background: '#fff', color: '#000', minHeight: '100vh', paddingBottom: '60px' }}>
-      <style>{`
-        .checkout-input {
-          width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 0; box-sizing: border-box; 
-          font-family: inherit; font-size: 14px; background: #fafafa; margin-bottom: 20px;
-          transition: all 0.2s ease;
-        }
-        .checkout-input:focus {
-          outline: none; border-color: #000; background: #fff; box-shadow: 0 0 0 1px #000;
-        }
-        .checkout-label {
-          display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; 
-          letter-spacing: 0.5px; margin-bottom: 8px; color: #555;
-        }
-      `}</style>
-      
-      <header style={{ padding: '20px 40px', borderBottom: '1px solid #eaeaea', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link to="/" style={{ fontSize: '24px', fontWeight: '900', letterSpacing: '-0.05em', textDecoration: 'none', color: '#000', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-          KITVERSE
-        </Link>
-        <span style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', color: '#888' }}>Secure Checkout</span>
-      </header>
+    <div className="min-h-screen bg-surface flex flex-col font-sans">
+      <Navbar />
 
-      <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px', display: 'flex', gap: '60px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+      <main className="pt-28 flex-1 w-full px-margin md:px-margin-desktop py-space-xl flex flex-col lg:flex-row gap-gutter-desktop">
         
-        {/* Billing Details Form */}
-        <div style={{ flex: '1 1 600px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '30px', borderBottom: '4px solid #c1ff38', display: 'inline-block', paddingBottom: '5px' }}>Billing Details</h1>
-          {error && <div style={{ background: '#000', color: '#ff4444', padding: '15px', marginBottom: '25px', fontWeight: 'bold', fontSize: '14px' }}>{error}</div>}
-          
-          {savedAddresses && savedAddresses.length > 0 && (
-            <div style={{ marginBottom: '30px', padding: '20px', background: '#f9faf7', border: '1px solid #eaeaea' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: '800', textTransform: 'uppercase', marginBottom: '15px' }}>Use a saved address</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {savedAddresses.map((addr, i) => (
-                  <button 
-                    key={i} type="button" 
-                    style={{ textAlign: 'left', padding: '15px', border: '1px solid #ddd', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}
-                    onClick={() => {
-                      setFormData(prev => ({ ...prev, ...addr }));
-                    }}
-                  >
-                    <strong>{addr.firstName} {addr.lastName}</strong><br/>
-                    {addr.streetAddress}{addr.apartment ? ", ${addr.apartment}" : ''}, {addr.city}, {addr.state} {addr.postcode}
-                  </button>
-                ))}
-                <button 
-                  type="button" 
-                  style={{ textAlign: 'left', padding: '15px', border: '1px dashed #bbb', background: 'transparent', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}
-                  onClick={() => setFormData(prev => ({ ...prev, firstName: '', lastName: '', streetAddress: '', apartment: '', city: '', state: '', postcode: '', phone: '', altPhone: '' }))}
-                >
-                  + Enter a new address
-                </button>
-              </div>
-            </div>
-          )}
-          
-          <form id="checkout-form" onSubmit={submit}>
-            <div style={{ display: 'flex', gap: '15px' }}>
-              <div style={{ flex: 1 }}>
-                <label className="checkout-label">First name *</label>
-                <input required type="text" className="checkout-input" value={formData.firstName} onChange={e => handleUpdate('firstName', e.target.value)} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label className="checkout-label">Last name *</label>
-                <input required type="text" className="checkout-input" value={formData.lastName} onChange={e => handleUpdate('lastName', e.target.value)} />
-              </div>
-            </div>
-
-            <label className="checkout-label">Country / Region *</label>
-            <input readOnly type="text" className="checkout-input" value={formData.country} style={{ backgroundColor: '#f5f5f5', color: '#888', cursor: 'not-allowed', outline: 'none' }} />
-
-            <label className="checkout-label">Street address *</label>
-            <input required type="text" placeholder="House number and street name" className="checkout-input" value={formData.streetAddress} onChange={e => handleUpdate('streetAddress', e.target.value)} />
-            <input type="text" placeholder="Apartment, suite, unit, etc. (optional)" className="checkout-input" value={formData.apartment} onChange={e => handleUpdate('apartment', e.target.value)} />
-
-            <div style={{ display: 'flex', gap: '15px' }}>
-              <div style={{ flex: 1 }}>
-                <label className="checkout-label">Town / City *</label>
-                <input required type="text" className="checkout-input" value={formData.city} onChange={e => handleUpdate('city', e.target.value)} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label className="checkout-label">State *</label>
-                <select required className="checkout-input" style={{ cursor: 'pointer', appearance: 'auto' }} value={formData.state} onChange={e => handleUpdate('state', e.target.value)}>
-                  <option value="" disabled>Select a state</option>
-                  {indianStates.map(state => (
-                    <option key={state} value={state}>{state}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <label className="checkout-label">Postcode / ZIP *</label>
-            <input required type="text" className="checkout-input" value={formData.postcode} onChange={e => handleUpdate('postcode', e.target.value)} />
-
-            <div style={{ display: 'flex', gap: '15px' }}>
-              <div style={{ flex: 1 }}>
-                <label className="checkout-label">Phone *</label>
-                <input required type="tel" className="checkout-input" value={formData.phone} onChange={e => handleUpdate('phone', e.target.value)} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label className="checkout-label">Additional Phone Number (optional)</label>
-                <input type="tel" className="checkout-input" value={formData.altPhone} onChange={e => handleUpdate('altPhone', e.target.value)} />
-              </div>
-            </div>
-
-            <label className="checkout-label">Email address *</label>
-            <input required type="email" className="checkout-input" value={formData.email} onChange={e => handleUpdate('email', e.target.value)} />
-
-            <label className="checkout-label">Order notes (optional)</label>
-            <textarea placeholder="Notes about your order, e.g. special notes for delivery." rows="4" className="checkout-input" style={{ resize: 'vertical' }} value={formData.notes} onChange={e => handleUpdate('notes', e.target.value)} />
-          </form>
-        </div>
+        {/* Billing Details / Login Prompt */}
+        <CheckoutForm 
+          authenticated={authenticated}
+          requireLogin={requireLogin}
+          error={error}
+          savedAddresses={savedAddresses}
+          formData={formData}
+          setFormData={setFormData}
+          handleUpdate={handleUpdate}
+          submit={submit}
+        />
 
         {/* Order Summary Sidebar */}
-        <div style={{ flex: '1 1 350px', background: '#fafafa', border: '1px solid #eaeaea', padding: '30px' }}>
-          <h3 style={{ fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '25px', letterSpacing: '0.5px' }}>Your Order</h3>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '30px' }}>
-            {cart.map((item, idx) => (
-              <div key={idx} style={{ display: 'flex', gap: '15px' }}>
-                <div style={{ width: '60px', height: '80px', background: '#fff', border: '1px solid #eaeaea', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img src={item.image} alt={item.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '4px' }}>{item.name}</div>
-                  <div style={{ fontSize: '12px', color: '#666', marginBottom: '2px' }}>{item.quality || item.productType}</div>
-                  <div style={{ fontSize: '12px', color: '#666' }}>Size: <strong>{item.size}</strong> &times; {item.qty}</div>
-                </div>
-                <div style={{ fontWeight: 'bold', fontSize: '14px' }}>
-                  {money(item.price * item.qty)}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ borderTop: '2px solid #000', paddingTop: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', fontSize: '14px' }}>
-              <span>Subtotal</span>
-              <span>{money(total)}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', fontSize: '14px' }}>
-              <span>Shipping</span>
-              <span>Calculated at next step</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '20px', fontWeight: '900', marginTop: '20px' }}>
-              <span>Total</span>
-              <span>{money(total)}</span>
-            </div>
-          </div>
-          
-          <div style={{ marginTop: '30px', fontSize: '11px', color: '#888', lineHeight: '1.5' }}>
-            Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.
-          </div>
-
-          <button type="submit" form="checkout-form" disabled={submitting} style={{ 
-            width: '100%', padding: '20px', background: '#000', color: '#c1ff38', border: 'none', 
-            marginTop: '25px', cursor: submitting ? 'not-allowed' : 'pointer', fontSize: '16px', 
-            fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px', transition: 'background 0.2s'
-          }}>
-            {submitting ? 'Processing...' : 'Place Order'}
-          </button>
-        </div>
-
-      </div>
+        <OrderSummary 
+          cart={cart}
+          setCart={setCart}
+          products={products}
+          submitting={submitting}
+          updateQuantity={updateQuantity}
+          total={total}
+          authenticated={authenticated}
+          requireLogin={requireLogin}
+        />
+      </main>
     </div>
   );
 }
-
-
-
-
-
-

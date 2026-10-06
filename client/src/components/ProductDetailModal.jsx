@@ -1,9 +1,17 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {sizes} from '../../../shared/catalog.js';
 import {stockFor} from '../../../shared/inventory.js';
 import {money} from '../format.js';
 import Modal from './Modal.jsx';
 import ProductImage from './ProductImage.jsx';
+import './ProductDetailModal.css';
+
+const productTypeLabels = {
+  jersey: 'JERSEY',
+  shorts: 'SHORTS',
+  'track-pants': 'TRACK PANTS',
+  'collar-tshirt': 'COLLAR TEE',
+};
 
 export default function ProductDetailModal({product, products = [], onSelectRelated, onClose, onAdd, demo, cart}) {
   const [selectedSize, setSelectedSize] = useState('');
@@ -12,7 +20,25 @@ export default function ProductDetailModal({product, products = [], onSelectRela
   const [zoomed, setZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState('50% 50%');
   const [error, setError] = useState('');
+  const [cms, setCms] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/content?keys=shipping-info,returns-info,size-guide')
+      .then(r => r.json())
+      .then(data => setCms(data.content || {}))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    setActiveIdx(0);
+    setSelectedSize('');
+    setZoomed(false);
+    setError('');
+  }, [product?.slug]);
+
   const images = product.images?.length ? product.images : [{url: product.image, label: 'Product photo'}];
+  const productType = product.productType || 'jersey';
+  const availableStock = Object.values(product.stock || {}).reduce((total, quantity) => total + quantity, 0);
   const remaining = size => Math.max(0, stockFor(product, size) - (cart.find(item => item.slug === product.slug && item.size === size)?.qty || 0));
 
   const updateZoomOrigin = (e) => {
@@ -26,73 +52,107 @@ export default function ProductDetailModal({product, products = [], onSelectRela
   };
 
   return <Modal label={product.name} className="product-modal-dialog" onClose={onClose}>
-    <div className="detail-layout">
-      <div className="detail-gallery-col">
-        <button type="button" className="detail-zoom-stage" aria-label={zoomed ? 'Zoom out' : 'Zoom product photo'}
-          aria-pressed={zoomed} 
-          style={{ touchAction: zoomed ? 'none' : 'auto' }}
-          onClick={(e) => { if (!zoomed) updateZoomOrigin(e); setZoomed(!zoomed); }}
-          onMouseMove={(e) => { if (zoomed) updateZoomOrigin(e); }}
-          onTouchMove={(e) => { if (zoomed) updateZoomOrigin(e); }}
-        >
-          <ProductImage src={images[activeIdx].url} alt={`${product.name} — ${images[activeIdx].label}`}
-            className="detail-zoom-img" style={{ transform: zoomed ? 'scale(2.2)' : 'scale(1)', transformOrigin: zoomOrigin }} />
-          <span className="detail-zoom-hint">{zoomed ? 'Click or tap to zoom out' : 'Click or tap to zoom'}</span>
-        </button>
-        {images.length > 1 && <div className="detail-thumbs-rail" role="group" aria-label="Product photographs">
-          {images.map((image, index) => <button type="button" key={image.url + index} className={`detail-thumb-btn ${activeIdx === index ? 'active' : ''}`}
-            aria-label={`View ${image.label}`} aria-pressed={activeIdx === index} onClick={() => {setActiveIdx(index); setZoomed(false);}}>
-            <ProductImage src={image.url} alt="" className="thumb-img-frame" />
-          </button>)}
-        </div>}
-      </div>
-      <div className="detail-info-col">
-        <div className="detail-header-tags"><span className="detail-cat-pill">{product.category === 'national' ? 'NATIONAL TEAM' : 'CLUB TEAM'}</span><span className="detail-team-pill">{product.team}</span></div>
-        <h2 className="detail-product-title">{product.name}</h2>
-        <div className="detail-price-box"><span className="detail-price">{money(product.price)}</span><span className="detail-tax-note">{demo ? 'Sample price' : 'Listed price'} · Checkout unavailable</span></div>
-        <p>Quality: <strong>{product.quality}</strong></p>
-        <p className="detail-note">{product.quality === 'First copy + shorts' ? 'Listed as a jersey and shorts set.' : 'Listed as a jersey only.'} Product specifications and measurements must be confirmed before orders open.</p>
-        <form className="detail-form" onSubmit={event => {
-          event.preventDefault();
-          if (!selectedSize || remaining(selectedSize) < 1) {setError('Choose an available size.'); return;}
-          try {onAdd(product, selectedSize);} catch (error) {setError(error.message);}
-        }}>
-          <fieldset className="size-fieldset"><legend>Choose your size</legend>
-            <div className="detail-size-chips">{sizes.map(size => <button key={size} type="button"
-              className={`size-chip ${selectedSize === size ? 'active' : ''}`} disabled={remaining(size) < 1}
-              aria-pressed={selectedSize === size} onClick={() => {setSelectedSize(size); setError('');}}>
-              <span className="chip-name" style={{ textDecoration: remaining(size) === 0 ? 'line-through' : 'none' }}>{size} {remaining(size) === 0 && <span style={{ color: '#ff4d4f', marginLeft: '4px' }}>&times;</span>}</span>
-                {remaining(size) > 0 && remaining(size) < 5 && <span className="chip-status" style={{ color: '#d97706' }}>Low stock</span>}
-            </button>)}</div>
-          </fieldset>
-          <button type="button" className="detail-size-chart-btn" onClick={() => setShowSizeGuide(true)}>Sizing guide</button>
-          {demo && <p className="detail-note">Sample inventory. Bag quantities do not reserve stock.</p>}
-          {error && <p role="alert">{error}</p>}
-          <button className="detail-submit-btn" type="submit" disabled={!selectedSize || remaining(selectedSize) < 1}>Add to cart <span>+</span></button>
-        </form>
+    <div className="detail-modal-shell">
+      <div className="detail-modal-utility"><span>KITVERSE / PRODUCT DOSSIER</span><span>{demo ? 'PREVIEW EDITION' : 'LIVE ARCHIVE'}</span></div>
+      <div className="detail-layout">
+        <div className="detail-gallery-col">
+          <div className="detail-gallery-index"><span>SPECIMEN / {productTypeLabels[productType] || 'APPAREL'}</span><span>{String(activeIdx + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}</span></div>
+          <button type="button" className="detail-zoom-stage" aria-label={zoomed ? 'Zoom out' : 'Zoom product photo'}
+            aria-pressed={zoomed}
+            style={{ touchAction: zoomed ? 'none' : 'auto' }}
+            onClick={(e) => { if (!zoomed) updateZoomOrigin(e); setZoomed(!zoomed); }}
+            onMouseMove={(e) => { if (zoomed) updateZoomOrigin(e); }}
+            onTouchMove={(e) => { if (zoomed) updateZoomOrigin(e); }}
+          >
+            <ProductImage src={images[Math.min(activeIdx, Math.max(0, images.length - 1))]?.url} alt={`${product.name} — ${images[Math.min(activeIdx, Math.max(0, images.length - 1))].label}`}
+              className="detail-zoom-img" style={{ transform: zoomed ? 'scale(2.2)' : 'scale(1)', transformOrigin: zoomOrigin }} />
+            <span className="detail-zoom-hint">{zoomed ? 'TAP TO RESET ZOOM' : 'TAP IMAGE TO INSPECT'}</span>
+          </button>
+          {images.length > 1 && <div className="detail-thumbs-rail" role="group" aria-label="Product photographs">
+            {images.map((image, index) => <button type="button" key={image.url + index} className={`detail-thumb-btn ${activeIdx === index ? 'active' : ''}`}
+              aria-label={`View ${image.label}`} aria-pressed={activeIdx === index} onClick={() => {setActiveIdx(index); setZoomed(false);}}>
+              <ProductImage src={image.url} alt="" className="thumb-img-frame" />
+            </button>)}
+          </div>}
+        </div>
+        <div className="detail-info-col">
+          <div className="detail-header-tags"><span className="detail-cat-pill">{product.category === 'national' ? 'NATIONAL TEAM' : product.category === 'club' ? 'CLUB TEAM' : productTypeLabels[productType] || 'APPAREL'}</span><span className="detail-team-pill">{product.team || 'KITVERSE ARCHIVE'}</span></div>
+          <h2 className="detail-product-title">{product.name}</h2>
+          <div className="detail-price-box"><span className="detail-price">{money(product.price)}</span><span className="detail-tax-note">{demo ? 'Sample price / preview inventory' : 'Current listed price / checkout available'}</span></div>
+          <div className="detail-facts">
+            <div><span>EDITION</span><strong>{product.season || 'ARCHIVE'}</strong></div>
+            <div><span>QUALITY</span><strong>{product.quality || productTypeLabels[productType] || 'STANDARD'}</strong></div>
+            <div><span>IN STOCK</span><strong>{availableStock} UNITS</strong></div>
+          </div>
+          <p className="detail-note">{product.quality === 'First copy + shorts' ? 'A coordinated jersey and shorts set.' : productType === 'jersey' ? 'A football shirt selected from the KITVERSE archive.' : `An archive ${productTypeLabels[productType]?.toLowerCase() || 'apparel'} piece.`} Choose an available size to add it to your cart.</p>
+          <form className="detail-form" onSubmit={event => {
+            event.preventDefault();
+            if (!selectedSize || remaining(selectedSize) < 1) {setError('Choose an available size.'); return;}
+            try {onAdd(product, selectedSize);} catch (error) {setError(error.message);}
+          }}>
+            <fieldset className="size-fieldset"><legend>CHOOSE YOUR SIZE</legend>
+              <div className="detail-size-chips">{sizes.map(size => <button key={size} type="button"
+                className={`size-chip ${selectedSize === size ? 'active' : ''}`} disabled={remaining(size) < 1}
+                aria-pressed={selectedSize === size} onClick={() => {setSelectedSize(size); setError('');}}>
+                <span className="chip-name">{size}</span>
+                {remaining(size) === 0 ? <span className="chip-status">SOLD OUT</span> : remaining(size) < 5 && <span className="chip-status">{remaining(size)} LEFT</span>}
+              </button>)}</div>
+            </fieldset>
+            <div className="detail-form-tools">
+              <span>SIZE RUN / S—XXL</span>
+              <button type="button" className="detail-size-chart-btn" onClick={() => setShowSizeGuide(true)}>SIZING GUIDE ↗</button>
+            </div>
+            {demo && <p className="detail-demo-note">Preview stock only. Orders are not enabled in preview mode.</p>}
+            {error && <p className="detail-form-error" role="alert">{error}</p>}
+            <button className="detail-submit-btn" type="submit" disabled={!selectedSize || remaining(selectedSize) < 1}>ADD TO CART <span>+</span></button>
+            
+            {cms && (cms['shipping-info']?.isActive !== false || cms['returns-info']?.isActive !== false) && (
+              <div className="mt-8 flex flex-col gap-2 border-t pt-6">
+                {cms['shipping-info']?.isActive !== false && cms['shipping-info']?.title && (
+                  <details className="group border-b pb-4 cursor-pointer">
+                    <summary className="font-label-technical tracking-widest text-[11px] uppercase text-black font-bold flex justify-between items-center list-none outline-none">
+                      {cms['shipping-info'].title}
+                      <span className="material-symbols-outlined text-[16px] group-open:rotate-180 transition-transform">keyboard_arrow_down</span>
+                    </summary>
+                    <p className="mt-3 font-body-sm text-[13px] leading-relaxed text-black/80">{cms['shipping-info'].content}</p>
+                  </details>
+                )}
+                
+                {cms['returns-info']?.isActive !== false && cms['returns-info']?.title && (
+                  <details className="group border-b pb-4 cursor-pointer">
+                    <summary className="font-label-technical tracking-widest text-[11px] uppercase text-black font-bold flex justify-between items-center list-none outline-none">
+                      {cms['returns-info'].title}
+                      <span className="material-symbols-outlined text-[16px] group-open:rotate-180 transition-transform">keyboard_arrow_down</span>
+                    </summary>
+                    <p className="mt-3 font-body-sm text-[13px] leading-relaxed text-black/80">{cms['returns-info'].content}</p>
+                  </details>
+                )}
+              </div>
+            )}
+
+          </form>
+        </div>
       </div>
     </div>
-    
+
     {products && products.length > 0 && (
-      <div className="related-products-section" style={{ marginTop: '40px', paddingTop: '30px', borderTop: '1px solid #eaeaea' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '20px' }}>You Might Also Like</h3>
-        <div className="related-products-rail" style={{ display: 'flex', overflowX: 'auto', gap: '15px', paddingBottom: '10px' }}>
+      <div className="related-products-section">
+        <h3>MORE FROM THE ARCHIVE</h3>
+        <div className="related-products-rail">
           {[...products.filter(p => p.team === product.team && p.slug !== product.slug), ...products.filter(p => p.category === product.category && p.team !== product.team && p.slug !== product.slug)].slice(0, 10).map(p => (
-            <button 
-              key={p.slug} 
+            <button
+              key={p.slug}
+              className="detail-related-card"
               type="button"
               onClick={() => onSelectRelated && onSelectRelated(p)}
-              style={{ flex: '0 0 auto', width: '150px', background: 'none', border: '1px solid #eaeaea', padding: '10px', cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '10px', transition: 'border-color 0.2s ease', boxSizing: 'border-box' }}
-              onMouseOver={(e) => e.currentTarget.style.borderColor = '#000'}
-              onMouseOut={(e) => e.currentTarget.style.borderColor = '#eaeaea'}
             >
-              <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f6ef', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                <ProductImage src={p.image} alt={p.name} style={{ width: '90%', height: '90%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+              <div className="detail-related-image">
+                <ProductImage src={p.image} alt={p.name} />
               </div>
-              <div style={{ width: '100%' }}>
-                <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#888', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.team}</div>
-                <div style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '1.2', marginTop: '4px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.name}</div>
-                <div style={{ fontSize: '13px', fontWeight: 'bold', marginTop: '6px' }}>{money(p.price)}</div>
+              <div className="detail-related-copy">
+                <span>{p.team}</span>
+                <strong>{p.name}</strong>
+                <b>{money(p.price)}</b>
               </div>
             </button>
           ))}

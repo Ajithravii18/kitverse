@@ -72,12 +72,12 @@ try {
   }
 
   // Corrupt saved data must not crash the app or inject prices and quantities.
-  await page.evaluate(() => localStorage.setItem('terrace:bag:v1', JSON.stringify([{slug:'arsenal-home-24-25',size:'M',qty:999,price:1}])));
+  await page.evaluate(() => localStorage.setItem('kitverse:bag:v1', JSON.stringify([{slug:'arsenal-home-24-25',size:'M',qty:999,price:1}])));
   await page.reload();
   await page.getByRole('button',{name:/Shopping bag/}).click();
   assert.match(await page.getByRole('dialog',{name:'Shopping bag'}).innerText(), /2,397/);
   await page.keyboard.press('Escape');
-  await page.evaluate(() => localStorage.setItem('terrace:bag:v1', '{broken'));
+  await page.evaluate(() => localStorage.setItem('kitverse:bag:v1', '{broken'));
   await page.reload();
   await page.getByRole('button',{name:/Shopping bag/}).click();
   await page.getByText(/saved bag could not be read/).waitFor();

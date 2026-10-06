@@ -80,7 +80,7 @@ Preserve these actual catalogue rules:
 - Jersey categories are club and national. Apparel also has a product type. Do not force team badges or jersey-specific quality details onto unrelated apparel.
 - Disable unavailable sizes, enforce remaining quantities, and show stock changes clearly. A saved bag does not reserve stock.
 - Seasonal and retro collections must be driven by real product metadata. Hide empty promotional sections.
-- Use KITVERSE consistently; an old README calls the project TERRACE, which is not the current customer-facing name.
+- Use KITVERSE consistently; an old README calls the project KITVERSE, which is not the current customer-facing name.
 
 Existing functionality includes catalogue filtering, price sorting, pagination, local bag persistence, registration, email-code verification, login, password recovery/reset, saved-address selection in checkout, customer order history, reference-based order tracking, account editing, product administration, and order-status administration. Payment initiation uses Razorpay, but the current flow needs reliable server-confirmed outcomes. Never represent a client payment callback alone as verified payment success.
 

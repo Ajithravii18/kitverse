@@ -1,131 +1,83 @@
+import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {mkdir} from 'node:fs/promises';
 import {createApp} from '../server/app.js';
 
-// Use a local Playwright install, or point PLAYWRIGHT_MODULE at an existing runtime.
-const {chromium} = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const server = createApp().listen(0, '127.0.0.1');
-await new Promise(resolve => server.once('listening', resolve));
-const url = `http://127.0.0.1:${server.address().port}`;
+process.env.NODE_ENV='test';
+const server=createApp().listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));
+const url=`http://127.0.0.1:${server.address().port}`;
 let browser;
-try {
-  browser = await chromium.launch({channel: process.env.BROWSER_CHANNEL || 'msedge', headless: true});
-  const page = await browser.newPage({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
-  const errors = [];
-  page.on('pageerror', error => errors.push(error.message));
-  // Tests stay deterministic and exercise broken-image fallback without contacting retailers.
-  await page.route('**/*', route => route.request().url().startsWith(url) ? route.continue() : route.abort());
-  await page.goto(url);
-  await page.locator('.product-card').first().waitFor();
-  
-  // Data-derived expectations
-  const { products } = await (await fetch(url + '/api/products')).json();
-  const visible = products;
-  const totalPages = Math.ceil(visible.length / 8);
-  const liverpoolProducts = visible.filter(p => p.team === 'Liverpool');
+try{
+ browser=await chromium.launch({channel:process.env.BROWSER_CHANNEL || 'msedge',headless:true});
+ const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+ page.setDefaultTimeout(10000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.route('**/*',r=>r.request().url().startsWith(url)?r.continue():r.abort());
+ await page.goto(url+'/shop?search=Liverpool&sort=price-low');
+ await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:true}).waitFor();
+ assert.equal(await page.getByRole('searchbox').inputValue(),'Liverpool');
+ assert.equal(await page.getByRole('combobox',{name:'Sort products'}).inputValue(),'price-low');
+ async function addLiverpool(){await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:true}).click();await page.locator('.size-chip').filter({hasText:/^M/}).click();await page.getByRole('button',{name:/ADD TO CART/}).click();}
+ await addLiverpool();await page.getByRole('button',{name:'Cart with 1 items'}).click();
+ const drawer=page.getByRole('dialog',{name:'Shopping Cart'});
+ const plus=drawer.getByRole('button',{name:'Increase Liverpool Home 23/24 quantity'});
+ await plus.click();await plus.click();assert.equal(await plus.isDisabled(),true);
+ for(let i=0;i<15;i++)await page.keyboard.press('Tab');
+ assert.equal(await page.evaluate(()=>document.activeElement.closest('dialog')?.getAttribute('aria-label')),'Shopping Cart');
+ await drawer.getByRole('button',{name:'Decrease Liverpool Home 23/24 quantity'}).click();
+ await page.keyboard.press('Escape');await drawer.waitFor({state:'detached'});
+ assert.equal(await page.getByRole('button',{name:'Cart with 2 items'}).evaluate(e=>e===document.activeElement),true);
+ await addLiverpool();assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('kitverse:bag:v1'))[0].qty),3);
+ await page.reload();await page.getByRole('button',{name:'Cart with 3 items'}).click();
+ await drawer.getByRole('link',{name:'Liverpool Home 23/24',exact:true}).last().click();
+ await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:true}).waitFor();
+ console.log('PASS: cart stock, shared state, persistence, product link, keyboard focus.');
 
-  assert.equal(await page.locator('.product-card').count(), 8);
-  await page.getByRole('button', {name: 'Next', exact: true}).click();
-  await page.getByText(`Page 2 of ${totalPages}`, {exact: true}).waitFor();
-  await page.getByRole('button', {name: 'Shop Liverpool jerseys', exact: true}).click();
-  await page.waitForFunction((count) => document.querySelectorAll('.product-card').length === count, liverpoolProducts.length);
-  assert.match(await page.locator('.product-card').first().innerText(), /Liverpool/);
-  await page.getByRole('button', {name: 'Player version', exact: true}).click();
-  await page.getByRole('button', {name: 'View all jerseys'}).click();
-  await page.waitForFunction(() => document.querySelectorAll('.product-card').length === 8);
-  assert.equal(await page.locator('.teams-active-filter').count(), 0);
-  await page.getByRole('button', {name: 'Select size and add Liverpool Home 23/24 to bag'}).click();
-  const product = page.getByRole('dialog', {name: 'Liverpool Home 23/24', exact: true});
-  await product.waitFor();
-  assert.equal(await product.getByRole('button', {name: 'S Unavailable', exact: true}).isDisabled(), true);
-  await product.getByRole('button', {name: 'Sizing guide', exact: true}).click();
-  const sizeGuide = page.getByRole('dialog', {name: 'Sizing guide', exact: true});
-  await sizeGuide.waitFor();
-  for (let i = 0; i < 6; i++) await page.keyboard.press('Tab');
-  assert.equal(await page.evaluate(() => document.activeElement.closest('dialog')?.getAttribute('aria-label')), 'Sizing guide');
-  await page.keyboard.press('Escape');
-  await sizeGuide.waitFor({state: 'detached'});
-  assert.equal(await product.isVisible(), true);
-  assert.equal(await product.getByRole('button', {name: 'Sizing guide', exact: true}).evaluate(element => element === document.activeElement), true);
-  await product.getByRole('button', {name: 'M 3 available', exact: true}).click();
-  await product.getByRole('button', {name: 'Add to matchday bag'}).click();
-  await page.reload();
-  await page.getByRole('button', {name: 'Shopping bag, 1 items'}).click();
-  const bag = page.getByRole('dialog', {name: 'Shopping bag', exact: true});
-  const increase = bag.getByRole('button', {name: 'Increase Liverpool Home 23/24 quantity'});
-  await increase.click(); await increase.click();
-  assert.equal(await increase.isDisabled(), true);
-  await bag.getByRole('button', {name: 'Decrease Liverpool Home 23/24 quantity'}).click();
-  assert.equal(await increase.isDisabled(), false);
-  await page.keyboard.press('Escape');
-  await page.getByRole('button', {name: 'Contact Us', exact: true}).click();
-  await page.getByRole('dialog', {name: 'Contact Us', exact: true}).waitFor();
-  await page.keyboard.press('Escape');
-  assert.equal(await page.getByText('Verified Fan', {exact:true}).count(), 0);
-  await mkdir('artifacts', {recursive: true});
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({path:'artifacts/desktop.png', fullPage:true});
+ await page.route('**/api/products',r=>r.fulfill({status:503,contentType:'application/json',body:'{"error":"offline"}'}));
+ await page.goto(url+'/checkout');await page.getByRole('button',{name:'Retry checkout'}).waitFor();
+ assert.equal(await page.getByText('CART IS EMPTY',{exact:true}).count(),0);
+ await page.unroute('**/api/products');await page.getByRole('button',{name:'Retry checkout'}).click();await page.getByText('LOGIN REQUIRED',{exact:true}).waitFor();
+ console.log('PASS: checkout outage retains cart and supports retry.');
 
-  await page.setViewportSize({width:390,height:844});
-  await page.getByRole('button', {name:'Open navigation'}).click();
-  await page.getByRole('dialog', {name:'Main navigation'}).getByRole('button', {name:'National teams'}).click();
-  assert.equal(await page.getByRole('dialog').count(),0);
-  await page.waitForFunction(() => [...document.querySelectorAll('.product-card')].every(card => card.textContent.includes('NATIONAL TEAM')));
-  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),true);
-  await page.evaluate(() => window.scrollTo(0,0));
-  await page.screenshot({path:'artifacts/mobile.png', fullPage:true});
-  await page.getByRole('button', {name: 'Select size and add Argentina Home 2024 to bag'}).click();
-  await page.getByRole('dialog', {name:'Argentina Home 2024'}).waitFor();
-  await page.screenshot({path:'artifacts/mobile-product.png'});
-  await page.getByRole('button',{name:'Sizing guide',exact:true}).click();
-  await page.screenshot({path:'artifacts/mobile-sizing.png'});
-  await page.keyboard.press('Escape');
-  await page.keyboard.press('Escape');
-  for (const width of [320,768]) {
-    await page.setViewportSize({width,height:900});
-    if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) {
-      console.log(await page.evaluate(() => [...document.querySelectorAll('body *')].filter(element => element.getBoundingClientRect().right > innerWidth && getComputedStyle(element).position !== 'absolute').slice(0,12).map(element => ({tag:element.tagName,class:element.className,right:element.getBoundingClientRect().right}))));
-      await page.screenshot({path:`artifacts/overflow-${width}.png`});
-    }
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),true,`Overflow at ${width}px`);
-  }
-  await page.setViewportSize({width:390,height:844});
+ const catalogue=await (await fetch(url+'/api/products')).json();
+ await page.route('**/api/products',r=>r.fulfill({contentType:'application/json',body:JSON.stringify({...catalogue,checkoutEnabled:true,demo:false})}));
+ await page.route('**/api/customer/me',r=>r.fulfill({contentType:'application/json',body:'{"authenticated":true,"email":"test@example.invalid","username":"Test","savedAddresses":[]}'}));
+ const pending={orderRef:'ORD-BROWSER-TEST',paymentIntentId:'order_test',razorpayKeyId:'test_key',paymentStatus:'pending',fulfilmentStatus:'unfulfilled',total:79900};
+ let creates=0;
+ await page.route('**/api/orders',r=>{creates++;assert.ok(r.request().headers()['idempotency-key']);return r.fulfill({contentType:'application/json',body:JSON.stringify(pending)});});
+ await page.route('**/api/orders/ORD-BROWSER-TEST',r=>r.fulfill({contentType:'application/json',body:JSON.stringify(pending)}));
+ await page.route('**/api/orders/verify-payment',r=>r.fulfill({contentType:'application/json',body:JSON.stringify({...pending,paymentStatus:'paid'})}));
+ await page.route('https://checkout.razorpay.com/v1/checkout.js',r=>r.fulfill({contentType:'application/javascript',body:'window.Razorpay=class{constructor(options){window.auditPayment=options;}on(){}open(){window.auditOpened=true;}}'}));
+ await page.evaluate(()=>localStorage.setItem('kitverse:bag:v1',JSON.stringify([{slug:'liverpool-home-23-24',size:'M',qty:1}])));
+ await page.goto(url+'/checkout');
+ for(const [name,value]of Object.entries({firstName:'Test',lastName:'Buyer',streetAddress:'1 Test Street',city:'Chennai',postcode:'600001',phone:'9000000000',email:'test@example.invalid'}))await page.locator('#checkout-'+name).fill(value);
+ await page.locator('#checkout-state').selectOption('Tamil Nadu'); await page.screenshot({path:'debug-checkout.png'});
+ await page.getByText('CONFIRM & PAY').click();await page.waitForFunction(()=>window.auditOpened);
+ await page.evaluate(()=>window.auditPayment.modal.ondismiss());await page.getByRole('button',{name:'Resume payment'}).click();assert.equal(creates,1);
+ await page.reload();await page.getByRole('button',{name:'Resume payment'}).click();await page.waitForFunction(()=>window.auditOpened);
+ await page.evaluate(()=>window.auditPayment.handler({razorpay_order_id:'order_test',razorpay_payment_id:'pay_test',razorpay_signature:'test'}));
+ await page.getByRole('heading',{name:'PAYMENT VERIFIED',exact:true}).waitFor();assert.equal(creates,1);
+ assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('kitverse:bag:v1'))),[]);
+ console.log('PASS: checkout form, payment dismissal, resume after reload, confirmed cart clearing (provider/API fixtures).');
+ await page.unroute('**/api/products');
+ const a={...catalogue.products[0],images:[{url:'/images/jersey-placeholder.svg',label:'Front'},{url:'/images/jersey-placeholder.svg',label:'Back'}]};
+ const b={...catalogue.products[1],team:a.team,images:[{url:'/images/jersey-placeholder.svg',label:'Front'}]};
+ await page.route('**/api/products',r=>r.fulfill({contentType:'application/json',body:JSON.stringify({products:[a,b],demo:true})}));
+ await page.goto(url+'/shop');await page.getByRole('button',{name:`View ${a.name}`,exact:true}).click();await page.getByRole('button',{name:'View Back',exact:true}).click();await page.locator('.detail-related-card').first().click();await page.getByRole('dialog',{name:b.name,exact:true}).waitFor();await page.keyboard.press('Escape');await page.unroute('**/api/products');
+ console.log('PASS: related product with fewer photos stays usable.');
 
-  // Corrupt saved data must not crash the app or inject prices and quantities.
-  await page.evaluate(() => localStorage.setItem('terrace:bag:v1', JSON.stringify([{slug:'liverpool-home-23-24',size:'M',qty:999,price:1}])));
-  await page.reload();
-  await page.getByRole('button',{name:'Shopping bag, 3 items'}).click();
-  assert.match(await page.getByRole('dialog',{name:'Shopping bag'}).innerText(), /2,397/);
-  await page.keyboard.press('Escape');
-  await page.evaluate(() => localStorage.setItem('terrace:bag:v1', '{broken'));
-  await page.reload();
-  await page.getByRole('button',{name:'Shopping bag, 0 items'}).click();
-  await page.getByText(/saved bag could not be read/).waitFor();
-  await page.keyboard.press('Escape');
-
-  await page.route('**/api/products', route => route.fulfill({status:503,contentType:'application/json',body:'{}'}));
-  await page.reload();
-  await page.getByRole('button',{name:'Try again'}).waitFor();
-  await page.unroute('**/api/products');
-  await page.getByRole('button',{name:'Try again'}).click();
-  await page.locator('.product-card').first().waitFor();
-  assert.equal(await page.locator('.product-card img').first().evaluate(image => image.src.endsWith('/images/jersey-placeholder.svg') && image.naturalWidth > 0), true);
-
-  await page.route('**/api/products', route => route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({products:[],demo:false,checkoutEnabled:false})}));
-  await page.reload();
-  await page.getByText('No jerseys match just yet.').waitFor();
-  assert.equal(await page.locator('.product-card').count(),0);
-  const storagePage = await browser.newPage();
-  await storagePage.addInitScript(() => {Storage.prototype.setItem = () => {throw new Error('Storage blocked');};});
-  await storagePage.route('**/*', route => route.request().url().startsWith(url) ? route.continue() : route.abort());
-  await storagePage.goto(url);
-  await storagePage.locator('.product-card').first().waitFor();
-  await storagePage.getByRole('button',{name:'Shopping bag, 0 items'}).click();
-  await storagePage.getByText(/browser could not save the bag/).waitFor();
-  await storagePage.close();
-  assert.deepEqual(errors,[]);
-  console.log('Browser checks passed: team pagination, reset, stock, saved bag, nested modal focus, mobile navigation, image fallback and API retry.');
-} finally {
-  await browser?.close();
-  await new Promise(resolve => server.close(resolve));
-}
+ await page.route('**/api/admin/me',r=>r.fulfill({contentType:'application/json',body:'{"authenticated":true}'}));
+ await page.route('**/api/admin/orders',r=>r.fulfill({contentType:'application/json',body:'{"orders":[]}'}));
+ await page.route('**/api/admin/products',r=>r.fulfill({contentType:'application/json',body:'{"products":[]}'}));
+ await mkdir('artifacts/e2e',{recursive:true});
+ for(const width of [390,768])for(const path of ['/shop','/signup','/checkout','/admin/products','/admin/orders']){
+  await page.setViewportSize({width,height:844});await page.goto(url+path);await page.waitForTimeout(250);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`Overflow ${width} ${path}`);
+ }
+ await page.screenshot({path:'artifacts/e2e/admin-orders-mobile.png'});
+ await page.setViewportSize({width:390,height:844});await page.goto(url+'/shop');await page.screenshot({path:'artifacts/e2e/shop-mobile.png'});
+ assert.deepEqual(errors,[]);
+ const blocked=await browser.newPage();await blocked.addInitScript(()=>{Storage.prototype.setItem=()=>{throw Error('blocked');};});
+ await blocked.route('**/*',r=>r.request().url().startsWith(url)?r.continue():r.abort());await blocked.goto(url+'/shop?search=Liverpool');await blocked.getByRole('button',{name:'View Liverpool Home 23/24',exact:true}).click();await blocked.locator('.size-chip').filter({hasText:/^M/}).click();await blocked.getByRole('button',{name:/ADD TO CART/}).click();
+ await blocked.getByRole('button',{name:'Cart with 1 items'}).click();await blocked.getByRole('button',{name:'PROCEED TO CHECKOUT'}).click();await blocked.getByText('LOGIN REQUIRED',{exact:true}).waitFor();await blocked.close();
+ console.log('PASS: mobile layouts, admin fixtures, blocked-storage navigation; no uncaught browser errors.');
+}finally{await browser?.close();await new Promise(r=>server.close(r));}

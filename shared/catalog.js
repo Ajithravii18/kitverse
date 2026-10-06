@@ -62,7 +62,7 @@ export const products = [
     "team": "Argentina",
     "category": "national",
     "tag": "COUNTRY PRIDE",
-    "image": "https://www.ohpsoccer.com/cdn/shop/files/ARG_HOME_JSY.jpg?v=1717891139",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/ARG_HOME_JSY.jpg?v=1717891139",
     "quality": "Player version",
     "price": 149900,
     "stock": {
@@ -130,7 +130,7 @@ export const products = [
     "team": "AC Milan",
     "category": "club",
     "tag": "NEW ARRIVAL",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/puma-mens-ac-milan-2024-25-authentic-home-jersey-red-black-front.webp?v=1772066485",
     "quality": "Embroidery",
     "price": 89900,
     "stock": {
@@ -147,7 +147,7 @@ export const products = [
     "team": "Juventus",
     "category": "club",
     "tag": "NEW ARRIVAL",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/is8002.jpg?v=1721257505",
     "quality": "First copy + shorts",
     "price": 94900,
     "stock": {
@@ -198,7 +198,7 @@ export const products = [
     "team": "AS Roma",
     "category": "club",
     "tag": "NEW ARRIVAL",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/ADIDASIS6058.jpg?v=1726786852",
     "quality": "Embroidery",
     "price": 109900,
     "stock": {
@@ -232,7 +232,7 @@ export const products = [
     "team": "Borussia Dortmund",
     "category": "club",
     "tag": "NEW ARRIVAL",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/download_d1b1b760-4450-4181-b692-37fdb00726e9.jpg?v=1720224783",
     "quality": "Master copy",
     "price": 119900,
     "stock": {
@@ -283,7 +283,7 @@ export const products = [
     "team": "Paris SG",
     "category": "club",
     "tag": "NEW ARRIVAL",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/NIKE_FN8795_411.jpg?v=1722643353",
     "quality": "First copy + shorts",
     "price": 134900,
     "stock": {
@@ -334,7 +334,7 @@ export const products = [
     "team": "Ajax",
     "category": "club",
     "tag": "NEW ARRIVAL",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/AJAX.jpg?v=1726787334",
     "quality": "Embroidery",
     "price": 149900,
     "stock": {
@@ -470,7 +470,7 @@ export const products = [
     "team": "Portugal",
     "category": "national",
     "tag": "SELEÇÃO",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/AURORA_FJ4275-657_PHSFH001-2000_1024x1024_0cb53868-5363-4316-b4b6-e6b427709fb5.webp?v=1711146388",
     "quality": "Player version",
     "price": 139900,
     "stock": {
@@ -504,7 +504,7 @@ export const products = [
     "team": "Germany",
     "category": "national",
     "tag": "DIE MANNSCHAFT",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/GERMANY_HOME_REPLICA_JSY.jpg?v=1718243428",
     "quality": "Player version",
     "price": 129900,
     "stock": {
@@ -538,7 +538,7 @@ export const products = [
     "team": "England",
     "category": "national",
     "tag": "THREE LIONS",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/AURORA_FJ4285-100_PHSFH001-2000_1024x1024_26f59c5d-8142-40c9-acc2-407b8d2f8f69.webp?v=1711061859",
     "quality": "First copy + shorts",
     "price": 124900,
     "stock": {
@@ -555,7 +555,7 @@ export const products = [
     "team": "Italy",
     "category": "national",
     "tag": "AZZURRI",
-    "image": "/images/jersey-placeholder.svg",
+    "image": "https://cdn.shopify.com/s/files/1/0551/9822/0382/files/ITALY_HOME_REPLICA_JSY.jpg?v=1718247099",
     "quality": "Master copy",
     "price": 129900,
     "stock": {
@@ -574,7 +574,7 @@ export const products = [
     "team": "Liverpool",
     "category": "club",
     "tag": "THE CLASSIC",
-    "image": "https://aztecasoccer.com/cdn/shop/files/nike-mens-liverpool-2023-24-home-jersey-red-white-front.jpg?v=1683058925&width=1406",
+    "image": "/images/jersey-placeholder.svg",
     "quality": "Embroidery",
     "price": 79900,
     "stock": {
@@ -593,7 +593,7 @@ export const products = [
     "team": "Real Madrid",
     "category": "club",
     "tag": "FAN FAVOURITE",
-    "image": "https://soccerpost.com/cdn/shop/files/ScreenShot2024-06-18at11.21.14AM_clipped_rev_1.png?v=1718724177&width=1440",
+    "image": "/images/jersey-placeholder.svg",
     "quality": "First copy + shorts",
     "price": 109900,
     "stock": {
@@ -612,7 +612,7 @@ export const products = [
     "team": "Chelsea",
     "category": "club",
     "tag": "COLOUR IN MOTION",
-    "image": "https://soccerpost.com/cdn/shop/files/AURORA_HJ4589-496_PHSFH001-2000_clipped_rev_1.png?v=1747839486",
+    "image": "/images/jersey-placeholder.svg",
     "quality": "Master copy",
     "price": 124900,
     "stock": {

@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from 'react';
 import {apiFetch} from './api.js';
 
-const key = 'terrace:bag:v1';
+const key = 'kitverse:bag:v1';
 export default function useBag() {
   const [cart, setCart] = useState([]);
   const [ready, setReady] = useState(false);
