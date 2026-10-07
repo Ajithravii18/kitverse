@@ -225,7 +225,7 @@ export default function Checkout() {
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center font-sans">
         <div className="flex flex-col items-center gap-space-sm">
           <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-          <span className="font-label-technical text-label-technical tracking-widest uppercase text-on-surface">INITIALIZING SECURE GATEWAY...</span>
+          <span className="font-label-technical text-label-technical tracking-widest uppercase text-foreground">INITIALIZING SECURE GATEWAY...</span>
         </div>
       </div>
     );
@@ -242,9 +242,9 @@ export default function Checkout() {
       <div className="min-h-screen bg-surface flex flex-col font-sans">
         <Navbar />
         <main className="pt-28 flex-1 flex flex-col items-center justify-center p-space-xl text-center">
-          <span className="material-symbols-outlined text-[64px] text-on-surface-variant mb-space-md">shopping_cart_off</span>
-          <h2 className="font-display-md text-display-md uppercase text-on-surface mb-space-sm">CART IS EMPTY</h2>
-          <p className="font-label-technical text-label-technical tracking-widest uppercase text-on-surface-variant mb-space-xl">YOUR ARCHIVE SELECTION HAS NO ITEMS.</p>
+          <span className="material-symbols-outlined text-[64px] text-foreground/70 mb-space-md">shopping_cart_off</span>
+          <h2 className="font-display-md text-display-md uppercase text-foreground mb-space-sm">CART IS EMPTY</h2>
+          <p className="font-label-technical text-label-technical tracking-widest uppercase text-foreground/70 mb-space-xl">YOUR ARCHIVE SELECTION HAS NO ITEMS.</p>
           <Link to="/" className="bg-black text-white px-space-xl py-3 font-label-mono-bold text-[14px] tracking-widest uppercase hover:bg-black/80 transition-colors">
             RETURN TO ARCHIVE
           </Link>

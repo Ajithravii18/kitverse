@@ -4,7 +4,7 @@ import ProductImage from '../ProductImage.jsx';
 import { sizes } from '../../../../shared/catalog.js';
 import { stockFor } from '../../../../shared/inventory.js';
 
-export function ProductCard({ p, onOpen, pIdx }) {
+export function ProductCard({ p, onOpen, pIdx, forceDarkTheme }) {
   const availableSizes = sizes.filter(s => stockFor(p, s) > 0);
   const isSoldOut = availableSizes.length === 0;
 
@@ -12,15 +12,15 @@ export function ProductCard({ p, onOpen, pIdx }) {
 
   return (
     <article 
-      className="group relative flex flex-col bg-card hover:shadow-xl hover:shadow-black/5 transition-all duration-500 overflow-hidden reveal-init rounded-sm ring-1 ring-border/30 hover:ring-border/80" 
+      className="group relative flex flex-col bg-card hover:shadow-xl hover:shadow-black/5 transition-all duration-500 overflow-hidden rounded-none ring-1 ring-border hover:ring-foreground/10" 
       data-home-reveal=""
       style={{ '--i': pIdx % 8 }}
     >
       <button 
         type="button"
-        className="relative w-full aspect-[4/5] bg-surface-container overflow-hidden block"
+        className="relative w-full aspect-[4/5] bg-bg-dark-1 overflow-hidden block"
         onClick={() => onOpen(p)}
-        aria-label={`View ${p.name} details`}
+        aria-label={`View ${p.name}`}
       >
         <ProductImage 
           src={p.image || (p.images && p.images[0]?.url)} 
@@ -38,47 +38,57 @@ export function ProductCard({ p, onOpen, pIdx }) {
         )}
         
         <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-start z-10 pointer-events-none">
-          {p.category === 'national' && (
-            <div className="px-2.5 py-1 bg-primary text-on-primary font-label-mono-bold text-[10px] uppercase tracking-[0.2em] shadow-sm">
-              NATIONAL
-            </div>
-          )}
-          
+          <div className="flex flex-col gap-2">
+            {p.featured && (
+              <span className="bg-foreground text-background font-sans text-[10px] uppercase px-2 py-1 tracking-widest shadow-sm w-fit">
+                Featured
+              </span>
+            )}
+            {p.tag && (
+              <span className="bg-background text-foreground font-sans text-[10px] uppercase px-2 py-1 tracking-widest shadow-sm border border-border w-fit">
+                {p.tag}
+              </span>
+            )}
+          </div>
           {isSoldOut && (
-            <div className="px-2.5 py-1 bg-foreground text-background font-label-technical text-[10px] uppercase tracking-[0.2em] shadow-sm ml-auto">
-              SOLD OUT
-            </div>
+            <span className="bg-background/90 text-foreground font-sans text-[10px] uppercase px-2 py-1 shadow-sm backdrop-blur-sm border border-border">
+              Sold Out
+            </span>
           )}
         </div>
       </button>
 
-      <div className="flex flex-col flex-1 p-5 gap-3 bg-card border-t border-border/20 z-10 relative">
-        <div className="flex flex-col gap-1 flex-1">
-          <span className="font-label-technical text-foreground/60 uppercase text-[10px] tracking-[0.15em]">
-            {p.quality} // {p.team}
-          </span>
-          <h3 className="font-headline-sm text-[18px] sm:text-[20px] uppercase text-foreground leading-tight line-clamp-2 mt-1">
-            {p.name}
-          </h3>
+      <div className="p-4 flex flex-col gap-4 flex-1 justify-between bg-card">
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-start gap-4">
+            <h3 className="font-display text-xl uppercase text-foreground leading-tight m-0">{p.name}</h3>
+            <span className="font-sans font-bold text-[13px] text-foreground shrink-0">{money(p.price)}</span>
+          </div>
+          <span className="font-sans text-[10px] uppercase tracking-widest text-secondary mt-1">{p.team} // {p.season || 'ARCHIVE'}</span>
         </div>
 
-        <div className="flex flex-col gap-4 mt-2">
-          <div className="flex items-end justify-between">
-            <span className="font-price-currency text-[16px] font-bold text-foreground tracking-tight">
-              {money(p.price)}
-            </span>
-            <span className="font-label-technical text-[10px] text-foreground/50 uppercase tracking-widest">
-              {isSoldOut ? 'RESTOCKING' : `${availableSizes.length} SIZES`}
-            </span>
+        <div className="flex flex-col gap-4 mt-auto pt-2 border-t border-border/50">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {sizes.map(s => {
+              const available = stockFor(p, s) > 0;
+              return (
+                <span 
+                  key={s} 
+                  className={`font-sans text-[10px] px-1.5 py-0.5 border uppercase tracking-widest ${available ? 'border-border text-foreground/80' : 'border-transparent text-secondary/40 line-through'}`}
+                >
+                  {s}
+                </span>
+              );
+            })}
           </div>
 
           <button 
             type="button" 
-            className={`w-full py-3.5 font-label-mono-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300 rounded-sm ${isSoldOut ? 'bg-border/30 text-foreground/40 cursor-not-allowed' : 'bg-transparent text-foreground border border-border/80 hover:bg-foreground hover:text-background hover:border-transparent active:scale-[0.98]'}`}
+            className={`w-full py-3 font-sans text-xs uppercase tracking-widest transition-all duration-300 ${isSoldOut ? 'bg-border/30 text-secondary/40 cursor-not-allowed' : 'bg-transparent text-foreground border border-border hover:bg-foreground hover:text-background hover:border-transparent active:scale-[0.98]'}`}
             onClick={() => onOpen(p)}
             disabled={isSoldOut}
           >
-            {isSoldOut ? 'SOLD OUT' : 'QUICK VIEW'}
+            {isSoldOut ? 'Sold Out' : 'Quick View'}
           </button>
         </div>
       </div>

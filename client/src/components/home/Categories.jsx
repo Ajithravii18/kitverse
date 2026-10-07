@@ -2,328 +2,79 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Categories() {
+  const specs = [
+    { label: 'Embroidery', url: '/shop?quality=Embroidery', desc: 'Stitched Durability' },
+    { label: 'First Copy + Shorts', url: '/shop?quality=First%20copy%20%2B%20shorts', desc: 'Complete Kit' },
+    { label: 'Master Copy', url: '/shop?quality=Master%20copy', desc: 'Premium Replica' },
+    { label: 'Player Version', url: '/shop?quality=Player%20version', desc: 'Matchday Spec' },
+    { label: 'Retro', url: '/shop?retro=true', desc: 'Heritage Archives' },
+    { label: 'National Teams', url: '/shop?category=national', desc: 'Global Stage' },
+  ];
+
   return (
-    <section id="filter-index" className="w-full px-4 md:px-margin-desktop bg-background py-16">
-  <div className="flex flex-col gap-12 max-w-7xl mx-auto">
-    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 overflow-hidden pb-2">
-      <div>
-        <div className="overflow-hidden pb-1">
-          <h2 data-home-reveal className="font-headline-md text-headline-md uppercase text-foreground font-extrabold tracking-tight translate-y-0 opacity-100">
-            Explore By Category
-          </h2>
+    <section id="filter-index" className="w-full px-6 md:px-12 bg-background py-24 md:py-32 border-b border-border">
+      <div className="flex flex-col max-w-[1400px] mx-auto gap-12 md:gap-20">
+        
+        {/* Strong Section Heading */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col max-w-2xl">
+            <span className="font-sans text-xs uppercase tracking-widest text-secondary mb-4 block">Chapter 01 // The Index</span>
+            <h2 data-home-reveal className="font-display text-display-md uppercase text-foreground m-0 leading-none">
+              Explore By Collection
+            </h2>
+          </div>
+          <Link to="/shop" className="font-sans text-sm uppercase tracking-widest text-foreground hover:text-accent transition-colors border-b border-foreground pb-1 w-fit">
+            View Complete Archive
+          </Link>
         </div>
-        <p data-home-reveal className="font-body-md text-foreground/70 max-w-2xl leading-relaxed mt-2 uppercase font-medium">
-          Direct access to our complete archive. Filter by club, national team, or apparel type.
-        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+          {/* Main Large Tile (Jerseys) */}
+          <Link to="/shop?type=jersey" data-home-reveal className="md:col-span-8 group relative bg-bg-dark-1 aspect-[4/3] md:aspect-auto md:h-[600px] overflow-hidden flex flex-col justify-end p-8 md:p-12">
+            <img src="/images/categories/jerseys.jpg" alt="Matchday Jerseys" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none"></div>
+            
+            <div className="relative z-10 flex flex-col items-start gap-4">
+              <span className="font-sans text-xs bg-foreground text-background px-3 py-1 uppercase tracking-widest">Apparel</span>
+              <h3 className="font-display text-5xl md:text-7xl uppercase text-foreground m-0 leading-none">Matchday<br/>Jerseys</h3>
+            </div>
+          </Link>
+
+          {/* Secondary Stack (Shorts & Track Pants) */}
+          <div className="md:col-span-4 flex flex-col gap-4 md:gap-6">
+            <Link to="/shop?type=shorts" data-home-reveal className="group relative bg-bg-dark-2 flex-1 min-h-[280px] overflow-hidden flex flex-col justify-end p-8">
+              <img src="/images/categories/shorts.jpg" alt="Performance Shorts" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none"></div>
+              
+              <div className="relative z-10 flex flex-col items-start gap-2">
+                <span className="font-sans text-[10px] bg-foreground text-background px-2 py-1 uppercase tracking-widest">Performance</span>
+                <h3 className="font-display text-3xl uppercase text-foreground m-0">Shorts</h3>
+              </div>
+            </Link>
+
+            <Link to="/shop?type=track-pants" data-home-reveal className="group relative bg-border flex-1 min-h-[280px] overflow-hidden flex flex-col justify-end p-8">
+              <img src="/images/categories/track-pants.jpg" alt="Track Pants" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none"></div>
+              
+              <div className="relative z-10 flex flex-col items-start gap-2">
+                <span className="font-sans text-[10px] bg-foreground text-background px-2 py-1 uppercase tracking-widest">Warmup</span>
+                <h3 className="font-display text-3xl uppercase text-foreground m-0">Track Pants</h3>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Quality & Spec Quick Links */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" data-home-reveal>
+          {specs.map(spec => (
+            <Link key={spec.label} to={spec.url} className="group flex flex-col gap-2 p-6 bg-card border border-border hover:border-foreground hover:bg-foreground hover:text-background transition-colors">
+              <h4 className="font-display text-xl uppercase leading-none m-0">{spec.label}</h4>
+              <span className="font-sans text-[10px] uppercase tracking-widest text-secondary group-hover:text-background/70">{spec.desc}</span>
+            </Link>
+          ))}
+        </div>
+
       </div>
-    </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter-desktop stagger-group">
-
-
-
-<Link to="/shop?category=club" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300 text-left overflow-hidden cursor-pointer" style={{ textDecoration: 'none' }}>
-  <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
-    <img className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700" src="/images/categories/jerseys.jpg" alt="Authentic Football Matchday Jersey"/>
-    <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
-      <span className="">J</span>
-    </div>
-    <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
-      86 UNITS
-    </div>
-    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
-      <span className="text-white/90 font-bold">MATCHDAY TOPS</span>
-      <span className="text-primary-container font-bold">PRE-SEASON</span>
-    </div>
-  </div>
-  <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
-    <div className="flex flex-col gap-0.5">
-      <div className="flex justify-between items-baseline">
-        <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">JERSEYS</span>
-        <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">TIER 01-04</span>
-      </div>
-      <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">MATCHDAY &amp; PRE-SEASON TOPS</span>
-    </div>
-    <div className="flex items-center justify-between pt-2 mt-1">
-      <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">FROM ₹1799</span>
-      <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-    </div>
-  </div>
-</Link>
-
-
-<Link to="/shop?quality=Embroidery" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300  text-left overflow-hidden">
- <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
- <img className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700" src="/images/categories/embroidery.jpg" alt="Direct Needle Embroidery Detail"/>
- <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
- <span className="">E</span>
- </div>
- <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
- 24 UNITS
- </div>
- <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
- <span className="text-white/90 font-bold">NEEDLE DENSITY</span>
- <span className="text-primary-container font-bold">160GSM</span>
- </div>
- </div>
- <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
- <div className="flex flex-col gap-0.5">
- <div className="flex justify-between items-baseline">
- <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">EMBROIDERY</span>
- <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">NEEDLE SPEC</span>
- </div>
- <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">HIGH-TENSILE DIRECT NEEDLE CREST</span>
- </div>
- <div className="flex items-center justify-between pt-2 mt-1">
- <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">TIER 01 STANDARD</span>
- <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
- </div>
- </div>
-</Link>
-
-
-<Link to="/shop?quality=First%20copy%20%2B%20shorts" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300  text-left overflow-hidden">
- <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
- <img className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700" src="/images/categories/combo.png" alt="1st Copy Kit and Shorts Ensemble"/>
- <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
- <span className="">F</span>
- </div>
- <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
- 19 SETS
- </div>
- <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
- <span className="text-white/90 font-bold">COMPLETE SUITE</span>
- <span className="text-primary-container font-bold">MATCH BOX</span>
- </div>
- </div>
- <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
- <div className="flex flex-col gap-0.5">
- <div className="flex justify-between items-baseline">
- <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">1ST COPY + SHORTS</span>
- <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">KIT COMBO</span>
- </div>
- <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">COMPLETE MATCHDAY UNIFORM SUITE</span>
- </div>
- <div className="flex items-center justify-between pt-2 mt-1">
- <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">TIER 02 SETS // ₹1,099</span>
- <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
- </div>
- </div>
-</Link>
-
-
-<Link to="/shop?quality=Master%20copy" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300  text-left overflow-hidden">
- <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
- <img className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700" src="/images/categories/master-copy.jpeg" alt="Master Copy 1:1 Heat-Sealed Chassis"/>
- <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
- <span className="">M</span>
- </div>
- <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
- 22 UNITS
- </div>
- <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
- <span className="text-white/90 font-bold">1:1 HEAT SEAL</span>
- <span className="text-primary-container font-bold">THERMO-TRANSFER</span>
- </div>
- </div>
- <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
- <div className="flex flex-col gap-0.5">
- <div className="flex justify-between items-baseline">
- <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">MASTER COPY</span>
- <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">CALIBRATED</span>
- </div>
- <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">1:1 THERMO-TRANSFER ATELIER SPEC</span>
- </div>
- <div className="flex items-center justify-between pt-2 mt-1">
- <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">TIER 03 ATELIER // ₹1,249</span>
- <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
- </div>
- </div>
-</Link>
-
-
-<Link to="/shop?quality=Player%20version" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300  text-left overflow-hidden">
- <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
- <img className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-700" src="/images/categories/player-version.jpg" alt="Player Version Aerodynamic Spec"/>
- <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-primary-container text-black font-label-mono-bold text-[10px] uppercase tracking-wider font-bold">
- <span className="">P</span>
- </div>
- <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
- 16 UNITS
- </div>
- <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
- <span className="text-white/90 font-bold">110GSM SLIM</span>
- <span className="text-primary-container font-bold">AEROREADY</span>
- </div>
- </div>
- <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
- <div className="flex flex-col gap-0.5">
- <div className="flex justify-between items-baseline">
- <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">PLAYER VERSION</span>
- <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">ELITE ON-PITCH</span>
- </div>
- <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">110GSM AERODYNAMIC MICRO-PERF</span>
- </div>
- <div className="flex items-center justify-between pt-2 mt-1">
- <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">ELITE SPEC // ₹1,499</span>
- <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
- </div>
- </div>
-</Link>
-
-
-<Link to="/shop?retro=true" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300  text-left overflow-hidden">
- <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
- <img className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700" src="/images/categories/retro.jpg" alt="Historic Vintage Football Kits Archive"/>
- <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
- <span className="">R</span>
- </div>
- <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
- 31 UNITS
- </div>
- <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
- <span className="text-white/90 font-bold">80S &amp; 90S ERA</span>
- <span className="text-primary-container font-bold">HISTORIC RUN</span>
- </div>
- </div>
- <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
- <div className="flex flex-col gap-0.5">
- <div className="flex justify-between items-baseline">
- <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">RETRO ARCHIVE</span>
- <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">VINTAGE</span>
- </div>
- <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">80S &amp; 90S HISTORIC CLASSICS</span>
- </div>
- <div className="flex items-center justify-between pt-2 mt-1">
- <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">KITVERSE LEGACY EDITIONS</span>
- <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
- </div>
- </div>
-</Link>
-
-
-<Link to="/shop?type=collar-tshirt" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300  text-left overflow-hidden">
- <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
- <img className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-700" src="/images/categories/collar.jpg" alt="Collar T-Shirts &amp; Tailored Football Polos"/>
- <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
- <span className="">C</span>
- </div>
- <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
- 12 UNITS
- </div>
- <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
- <span className="text-white/90 font-bold">RIBBED POLO</span>
- <span className="text-primary-container font-bold">CASUAL CUT</span>
- </div>
- </div>
- <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
- <div className="flex flex-col gap-0.5">
- <div className="flex justify-between items-baseline">
- <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">COLLAR T-SHIRTS</span>
- <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">TAILORED</span>
- </div>
- <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">RIBBED POLO &amp; CASUAL CUTS</span>
- </div>
- <div className="flex items-center justify-between pt-2 mt-1">
- <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">TAILORED STREETWEAR</span>
- <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
- </div>
- </div>
-</Link>
-
-
-<Link to="/shop?type=shorts" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300  text-left overflow-hidden">
- <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
- <img className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700" src="/images/categories/shorts.jpg" alt="Authentic Club Performance Shorts"/>
- <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
- <span className="">S</span>
- </div>
- <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
- 28 UNITS
- </div>
- <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
- <span className="text-white/90 font-bold">POLY-MESH</span>
- <span className="text-primary-container font-bold">DRAWCORD</span>
- </div>
- </div>
- <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
- <div className="flex flex-col gap-0.5">
- <div className="flex justify-between items-baseline">
- <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">SHORTS</span>
- <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">REPERTOIRE</span>
- </div>
- <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">POLY-MESH PERFORMANCE REPERTOIRE</span>
- </div>
- <div className="flex items-center justify-between pt-2 mt-1">
- <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">FROM ₹250</span>
- <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
- </div>
- </div>
-</Link>
-
-
-<Link to="/shop?type=track-pants" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300  text-left overflow-hidden">
- <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
- <img className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-700" src="/images/categories/track-pants.jpg" alt="Track Pants &amp; Technical Runners"/>
- <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
- <span className="">T</span>
- </div>
- <div className="absolute top-2.5 right-2.5 px-2.5 py-1 bg-white/95 backdrop-blur-sm font-price-currency text-[11px] font-bold text-black">
- 18 UNITS
- </div>
- <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
- <span className="text-white/90 font-bold">CRINKLE NYLON</span>
- <span className="text-primary-container font-bold">TEARAWAY</span>
- </div>
- </div>
- <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
- <div className="flex flex-col gap-0.5">
- <div className="flex justify-between items-baseline">
- <span className="font-headline-sm text-[18px] uppercase text-black group-hover:text-primary transition-colors">TRACK PANTS</span>
- <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">RUNNERS</span>
- </div>
- <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">240GSM CRINKLE NYLON &amp; RUNNERS</span>
- </div>
- <div className="flex items-center justify-between pt-2 mt-1">
- <span className="font-label-technical text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">FROM ₹999</span>
- <span className="material-symbols-outlined text-[18px] text-black group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
- </div>
- </div>
-</Link>
-
-
-<Link to="/shop?sort=price-low" data-home-reveal="" className="category-card group relative flex flex-col justify-between bg-surface-container-low text-black hover:bg-white transition-all duration-300 text-left overflow-hidden cursor-pointer" style={{ textDecoration: 'none' }}>
-  <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-surface-container overflow-hidden">
-    <img className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700" src="/images/categories/clearance.jpg" alt="Clearance Sale"/>
-    <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 bg-error text-white font-label-mono-bold text-[10px] uppercase tracking-wider">
-      <span className="">%</span>
-    </div>
-    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex justify-between text-white font-label-technical text-[9px] uppercase tracking-widest">
-      <span className="text-white/90 font-bold">ARCHIVE</span>
-      <span className="text-error-container font-bold">MARKDOWN</span>
-    </div>
-  </div>
-  <div className="p-space-md flex flex-col justify-between flex-1 gap-2">
-    <div className="flex flex-col gap-0.5">
-      <div className="flex justify-between items-baseline">
-        <span className="font-headline-sm text-[18px] uppercase text-error group-hover:text-error transition-colors">CLEARANCE</span>
-        <span className="font-label-technical text-on-surface-variant uppercase text-[9px]">SALE</span>
-      </div>
-      <span className="font-label-technical text-on-surface-variant uppercase tracking-wider text-[10px]">FINAL MATCHDAY MARKDOWNS</span>
-    </div>
-    <div className="flex items-center justify-between pt-2 mt-1">
-      <span className="font-label-technical text-[10px] text-error uppercase tracking-wider font-bold">UP TO 50% OFF</span>
-      <span className="material-symbols-outlined text-[18px] text-error group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-    </div>
-  </div>
-</Link>
-
-
-
-<Link to="/shop" data-home-reveal="" className="category-card category-shop-all group" aria-label="Shop all kits and apparel">
- <span className="category-shop-kicker">KITVERSE / THE COMPLETE ARCHIVE</span>
- <div className="category-shop-center"><h3>SHOP<br/>ALL<span aria-hidden="true">↗</span></h3><p>Every kit. Every colour.<br/>Find your matchday.</p></div>
- <span className="category-shop-bottom">EXPLORE THE COLLECTION <span aria-hidden="true">→</span></span>
-</Link>
-</div></div></section>
+    </section>
   );
 }

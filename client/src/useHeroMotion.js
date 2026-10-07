@@ -4,10 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function useHeroMotion(ref) {
+export default function useHeroMotion(ref, ready) {
   useLayoutEffect(() => {
     const hero = ref.current;
-    if (!hero) return;
+    if (!hero || !ready) return;
     
     const media = gsap.matchMedia();
     let disposed = false;
@@ -15,30 +15,29 @@ export default function useHeroMotion(ref) {
     
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const select = gsap.utils.selector(hero);
+      const cards = select('[data-hero-card]');
+      
+      // Safety check: wait until cards are actually in the DOM
+      if (cards.length === 0) return;
       
       if (hero.getBoundingClientRect().bottom > 0) {
-        // Prepare line mask for headline
-        const headline = select('[data-hero-headline]')[0];
-        if (headline) {
-          // simple line wrapping isn't perfect without a library like SplitText, 
-          // but we can wrap the whole text in a mask container or animate it as a block reveal.
-          gsap.set(headline, { yPercent: 100, opacity: 0 });
-        }
+        // Animate the text and the 3D fan of cards
+        // IMPORTANT: We do NOT clearProps for transforms on the cards, because their 
+        // inline layout transforms (from React) would be cleared, causing them to stack at 0,0.
+        // We only clear opacity.
+        const tl = gsap.timeline();
         
-        gsap.timeline({ defaults: { ease: 'power3.out', clearProps: 'opacity,transform,yPercent,filter' } })
-          // 1. Image settles into place
-          .fromTo(select('[data-hero-image-wrap]'), 
-            { opacity: 0, y: 30, scale: 0.98, filter: 'blur(10px)' }, 
-            { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.2 }, 0)
+        tl.fromTo(select('h1'), 
+          { opacity: 0, scale: 1.1 }, 
+          { opacity: 1, scale: 1, duration: 2, ease: 'power2.out', clearProps: 'opacity,scale' }, 0)
+        
+        tl.fromTo(cards,
+          { y: 300, opacity: 0, rotateX: 20 },
+          { y: 0, opacity: 1, rotateX: 0, duration: 1.5, stagger: 0.1, ease: 'expo.out', clearProps: 'opacity,rotateX' }, 0.2)
           
-          // 2. Headline reveals (upwards with slight opacity)
-          .to(select('[data-hero-headline]'), 
-            { yPercent: 0, opacity: 1, duration: 1 }, 0.3)
-            
-          // 3. Supporting text and CTA
-          .from(select('[data-hero-text]'), { opacity: 0, y: 16, duration: 0.8 }, 0.6)
-          .from(select('[data-hero-cta]'), { opacity: 0, y: 16, duration: 0.8 }, 0.7)
-          .from(select('[data-hero-badge]'), { opacity: 0, y: 10, duration: 0.6 }, 0.9);
+        tl.fromTo(select('[data-hero-text], [data-hero-cta]'), 
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: 'power2.out', clearProps: 'all' }, 0.8);
       }
     }, hero);
     
@@ -50,5 +49,5 @@ export default function useHeroMotion(ref) {
       hero.removeEventListener('load', refresh, true);
       media.revert();
     };
-  }, [ref]);
+  }, [ref, ready]);
 }

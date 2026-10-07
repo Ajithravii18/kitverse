@@ -1,0 +1,12 @@
+const fs = require('fs');
+let config = fs.readFileSync('tailwind.config.js', 'utf8');
+config = config.replace(/'text-xs'/g, "'xs'");
+config = config.replace(/'text-sm'/g, "'sm'");
+config = config.replace(/'text-base'/g, "'base'");
+config = config.replace(/'text-lg'/g, "'lg'");
+config = config.replace(/'text-xl'/g, "'xl'");
+config = config.replace(/'text-2xl'/g, "'2xl'");
+config = config.replace(/'text-3xl'/g, "'3xl'");
+config = config.replace(/'text-4xl'/g, "'4xl'");
+fs.writeFileSync('tailwind.config.js', config);
+console.log('Fixed Tailwind fontSize keys');

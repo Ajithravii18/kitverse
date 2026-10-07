@@ -52,10 +52,10 @@ export default function ProductDetailModal({product, products = [], onSelectRela
   };
 
   return <Modal label={product.name} className="product-modal-dialog" onClose={onClose}>
-    <div className="detail-modal-shell">
+    <div className="w-full max-w-[1200px] bg-background text-foreground flex flex-col md:flex-row overflow-hidden relative">
       <div className="detail-modal-utility"><span>KITVERSE / PRODUCT DOSSIER</span><span>{demo ? 'PREVIEW EDITION' : 'LIVE ARCHIVE'}</span></div>
       <div className="detail-layout">
-        <div className="detail-gallery-col">
+        <div className="w-full md:w-1/2 relative bg-card flex flex-col border-r border-border min-h-[400px]">
           <div className="detail-gallery-index"><span>SPECIMEN / {productTypeLabels[productType] || 'APPAREL'}</span><span>{String(activeIdx + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}</span></div>
           <button type="button" className="detail-zoom-stage" aria-label={zoomed ? 'Zoom out' : 'Zoom product photo'}
             aria-pressed={zoomed}
@@ -75,11 +75,11 @@ export default function ProductDetailModal({product, products = [], onSelectRela
             </button>)}
           </div>}
         </div>
-        <div className="detail-info-col">
-          <div className="detail-header-tags"><span className="detail-cat-pill">{product.category === 'national' ? 'NATIONAL TEAM' : product.category === 'club' ? 'CLUB TEAM' : productTypeLabels[productType] || 'APPAREL'}</span><span className="detail-team-pill">{product.team || 'KITVERSE ARCHIVE'}</span></div>
-          <h2 className="detail-product-title">{product.name}</h2>
-          <div className="detail-price-box"><span className="detail-price">{money(product.price)}</span><span className="detail-tax-note">{demo ? 'Sample price / preview inventory' : 'Current listed price / checkout available'}</span></div>
-          <div className="detail-facts">
+        <div className="w-full md:w-1/2 flex flex-col p-6 md:p-12">
+          <div className="flex gap-2 font-label-technical text-[10px] uppercase mb-2"><span className="detail-cat-pill">{product.category === 'national' ? 'NATIONAL TEAM' : product.category === 'club' ? 'CLUB TEAM' : productTypeLabels[productType] || 'APPAREL'}</span><span className="detail-team-pill">{product.team || 'KITVERSE ARCHIVE'}</span></div>
+          <h2 className="font-headline-md text-[clamp(44px,6vw,72px)] uppercase leading-[0.9] tracking-tight mb-2 mt-4">{product.name}</h2>
+          <div className="detail-price-box"><span className="font-price-currency text-xl font-bold block mb-4 border-b border-border pb-4">{money(product.price)}</span><span className="detail-tax-note">{demo ? 'Sample price / preview inventory' : 'Current listed price / checkout available'}</span></div>
+          <div className="grid grid-cols-3 gap-4 border-b border-border pb-6 mb-6 font-label-technical text-[11px] uppercase tracking-wider text-foreground/60">
             <div><span>EDITION</span><strong>{product.season || 'ARCHIVE'}</strong></div>
             <div><span>QUALITY</span><strong>{product.quality || productTypeLabels[productType] || 'STANDARD'}</strong></div>
             <div><span>IN STOCK</span><strong>{availableStock} UNITS</strong></div>
@@ -90,9 +90,9 @@ export default function ProductDetailModal({product, products = [], onSelectRela
             if (!selectedSize || remaining(selectedSize) < 1) {setError('Choose an available size.'); return;}
             try {onAdd(product, selectedSize);} catch (error) {setError(error.message);}
           }}>
-            <fieldset className="size-fieldset"><legend>CHOOSE YOUR SIZE</legend>
-              <div className="detail-size-chips">{sizes.map(size => <button key={size} type="button"
-                className={`size-chip ${selectedSize === size ? 'active' : ''}`} disabled={remaining(size) < 1}
+            <fieldset className="mt-6 mb-4"><legend className="font-label-technical text-[11px] mb-3">CHOOSE YOUR SIZE</legend>
+              <div className="grid grid-cols-3 gap-2">{sizes.map(size => <button key={size} type="button"
+                className={`size-chip border border-border py-3 px-2 flex flex-col items-center justify-center font-label-mono-bold hover:border-foreground transition-colors ${selectedSize === size ? 'bg-foreground text-background' : 'bg-transparent text-foreground'}`} disabled={remaining(size) < 1}
                 aria-pressed={selectedSize === size} onClick={() => {setSelectedSize(size); setError('');}}>
                 <span className="chip-name">{size}</span>
                 {remaining(size) === 0 ? <span className="chip-status">SOLD OUT</span> : remaining(size) < 5 && <span className="chip-status">{remaining(size)} LEFT</span>}
@@ -104,7 +104,7 @@ export default function ProductDetailModal({product, products = [], onSelectRela
             </div>
             {demo && <p className="detail-demo-note">Preview stock only. Orders are not enabled in preview mode.</p>}
             {error && <p className="detail-form-error" role="alert">{error}</p>}
-            <button className="detail-submit-btn" type="submit" disabled={!selectedSize || remaining(selectedSize) < 1}>ADD TO CART <span>+</span></button>
+            <button className="w-full bg-foreground text-background py-5 font-label-mono-bold text-[14px] uppercase mt-8 hover:bg-accent hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-transparent hover:border-foreground" type="submit" disabled={!selectedSize || remaining(selectedSize) < 1}>ADD TO CART <span>+</span></button>
             
             {cms && (cms['shipping-info']?.isActive !== false || cms['returns-info']?.isActive !== false) && (
               <div className="mt-8 flex flex-col gap-2 border-t pt-6">

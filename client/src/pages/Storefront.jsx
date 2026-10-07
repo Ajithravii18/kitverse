@@ -229,78 +229,35 @@ export default function Storefront() {
 
 
 
-</div></main><footer className="w-full bg-white text-on-surface">
-  {/* Mobile-optimized utility banner */}
-  <div className="w-full bg-black text-white px-margin-desktop py-2.5 overflow-hidden">
-    <div className="flex flex-wrap items-center justify-center sm:justify-between gap-3 sm:gap-space-sm font-label-technical text-label-technical uppercase tracking-widest text-[9px] text-center sm:text-left">
-      <div className="flex items-center justify-center gap-2 w-full sm:w-auto">
-        <span className="w-2 h-2 rounded-full bg-primary inline-block shrink-0"></span>
-        <span className="font-bold text-white">DELHI CENTRAL ATELIER DISPATCH ACTIVE</span>
+</div></main><footer className="w-full bg-foreground text-background py-24 px-6 md:px-12 border-t border-border mt-auto">
+  <div className="max-w-[1400px] mx-auto flex flex-col gap-16">
+    <div className="flex flex-col md:flex-row justify-between gap-12">
+      <div className="flex flex-col gap-6 max-w-sm">
+        <h2 className="font-display text-4xl uppercase m-0 leading-none">KITVERSE</h2>
+        <p className="font-sans text-sm text-background/60">
+          A high-tension football culture publication, garment registry, and pitchside artifact atelier. Fusing football culture with European publishing standards.
+        </p>
       </div>
-      <div className="hidden lg:flex items-center gap-1.5 text-white/80">
-        <span className="material-symbols-outlined text-[13px] text-primary">lock</span>
-        <span>SECURE 256-BIT ENCRYPTION</span>
-      </div>
-      <div className="hidden md:flex items-center gap-1.5 text-white/80">
-        <span className="material-symbols-outlined text-[13px] text-primary">verified</span>
-        <span>RAZORPAY VERIFIED GATEWAY</span>
-      </div>
-      <div className="flex items-center justify-center gap-1.5 text-white/80 w-full sm:w-auto mt-1 sm:mt-0">
-        <span className="material-symbols-outlined text-[13px] text-primary">local_shipping</span>
-        <span>ALL INDIA EXPRESS TRANSIT: 48-72 HOURS</span>
+      <div className="flex flex-col sm:flex-row gap-12 md:gap-24">
+        <div className="flex flex-col gap-4">
+          <span className="font-sans text-xs uppercase tracking-widest text-background/50">Archive</span>
+          <a href="/shop" className="font-sans text-sm hover:text-accent transition-colors">All Products</a>
+          <a href="/shop?category=club" className="font-sans text-sm hover:text-accent transition-colors">Club Kits</a>
+          <a href="/shop?category=national" className="font-sans text-sm hover:text-accent transition-colors">National Teams</a>
+        </div>
+        <div className="flex flex-col gap-4">
+          <span className="font-sans text-xs uppercase tracking-widest text-background/50">Support</span>
+          <a href="/profile" className="font-sans text-sm hover:text-accent transition-colors">Your Account</a>
+          <a href="mailto:hello@kitverse.in" className="font-sans text-sm hover:text-accent transition-colors">Contact Us</a>
+          <span className="font-sans text-sm text-background/60">Dispatch: India</span>
+        </div>
       </div>
     </div>
-  </div>
-
-  {/* Main footer body with responsive padding */}
-  <div className="w-full px-margin-desktop py-12 md:py-space-3xl flex flex-col gap-12 md:gap-space-2xl">
-    
-    <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8 md:gap-space-md pb-8 md:pb-space-lg border-b border-black/5 lg:border-none">
-      <div className="flex flex-col">
-        <span className="font-display-xl text-display-xl-mobile md:text-display-xl tracking-tight uppercase text-black leading-none select-none">KITVERSE</span>
-        <span className="font-label-mono-bold text-label-mono-bold text-black uppercase tracking-wider mt-2 md:mt-1">ATELIER RUN: ISSUE 04 // 2026-2027 ARCHIVE</span>
-      </div>
-      <div className="flex flex-col items-start lg:items-end gap-2 max-w-md mt-4 lg:mt-0">
-        <span className="font-label-technical text-label-technical text-on-surface-variant uppercase tracking-widest border border-black/10 px-2 py-1 inline-block">EDITORIAL MASTHEAD & PRODUCTION MANIFESTO</span>
-        <p data-home-reveal="" className="font-body-sm text-body-sm text-on-surface-variant uppercase text-left lg:text-right leading-relaxed mt-2">A high-tension football culture publication, garment registry, and pitchside artifact atelier. Fusing football culture with European high-fashion publishing standards.</p>
-      </div>
-    </div>
-
-    <div className="bg-surface p-6 md:p-space-lg flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 md:gap-space-md border border-black/5">
-      <div className="flex flex-col gap-2">
-        <span className="font-label-mono-bold text-label-mono-bold uppercase text-secondary tracking-wider">MANIFESTO ENTRY #04 // CITRON PITCH SPECIFICATION</span>
-        <p data-home-reveal="" className="font-title-editorial text-title-editorial text-on-surface">"Matchday is an open-air runway. Fabric carries heritage, nylon carries glory."</p>
-      </div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-shrink-0 w-full lg:w-auto pt-4 lg:pt-0 border-t border-black/5 lg:border-none">
-        <div className="flex flex-col items-start lg:items-end">
-          <span className="font-label-technical text-label-technical uppercase text-on-surface-variant">AUTHENTICATED KITVERSE APPAREL</span>
-          <span className="font-label-mono-bold text-label-mono-bold text-black mt-0.5">EDITION 04/500 // VERIFIED</span>
-        </div>
-        <div className="px-3 py-1.5 bg-primary-container text-on-primary-fixed font-label-mono-bold text-label-mono-bold border border-transparent shadow-sm">ISO 9001 SPEC</div>
-      </div>
-    </div>
-
-    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 md:gap-space-md pt-8 md:pt-space-sm border-t border-black/10">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-space-md w-full lg:w-auto">
-        <div className="flex flex-col">
-          <svg className="w-32 md:w-36 h-7 text-black fill-current" viewBox="0 0 160 30">
-            <rect height="30" width="3" x="0" y="0"/><rect height="30" width="2" x="6" y="0"/><rect height="30" width="6" x="11" y="0"/><rect height="30" width="2" x="20" y="0"/><rect height="30" width="4" x="25" y="0"/><rect height="30" width="2" x="32" y="0"/><rect height="30" width="5" x="37" y="0"/><rect height="30" width="2" x="45" y="0"/><rect height="30" width="7" x="50" y="0"/><rect height="30" width="3" x="60" y="0"/><rect height="30" width="1" x="66" y="0"/><rect height="30" width="4" x="70" y="0"/><rect height="30" width="6" x="77" y="0"/><rect height="30" width="2" x="86" y="0"/><rect height="30" width="4" x="91" y="0"/><rect height="30" width="6" x="98" y="0"/><rect height="30" width="2" x="107" y="0"/><rect height="30" width="7" x="112" y="0"/><rect height="30" width="2" x="122" y="0"/><rect height="30" width="4" x="127" y="0"/><rect height="30" width="3" x="134" y="0"/><rect height="30" width="6" x="140" y="0"/><rect height="30" width="2" x="149" y="0"/><rect height="30" width="5" x="154" y="0"/>
-          </svg>
-          <span className="font-label-technical text-label-technical tracking-widest text-black mt-1.5">KV-2026-IND-04 // VERIFIED</span>
-        </div>
-        <div className="font-label-technical text-label-technical uppercase text-on-surface-variant max-w-[200px] sm:max-w-none leading-relaxed">© 2025-2026 KITVERSE MAGAZINE ARCHIVE.<br className="hidden sm:block" /> ALL FOOTBALL CULTURE & DESIGN RIGHTS RESERVED.</div>
-      </div>
-      
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full lg:w-auto gap-6 md:gap-space-md pt-6 sm:pt-0 border-t border-black/5 lg:border-none">
-        <div className="flex flex-wrap items-center gap-4 md:gap-space-md font-label-mono-bold text-label-mono-bold uppercase text-on-surface-variant">
-          <a href="#" onClick={(e) => { e.preventDefault(); alert("Terms of Supply: Coming soon."); }} className="hover:text-black transition-colors border-b border-transparent hover:border-black pb-0.5">TERMS OF SUPPLY</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); alert("Authenticity Guarantee: Coming soon."); }} className="hover:text-black transition-colors border-b border-transparent hover:border-black pb-0.5">AUTHENTICITY</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); alert("Newsletter subscription opening soon."); }} className="hover:text-black transition-colors border-b border-transparent hover:border-black pb-0.5">SUBSCRIBE</a>
-        </div>
-        <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="w-10 h-10 flex items-center justify-center hover:bg-black hover:text-white transition-colors duration-200 text-black border border-black/10 hover:border-black" title="Return to Top">
-          <span className="material-symbols-outlined text-[20px]">arrow_upward</span>
-        </a>
-      </div>
+    <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-8 border-t border-background/20">
+      <span className="font-sans text-xs uppercase tracking-widest text-background/50">© 2026 KITVERSE. All rights reserved.</span>
+      <a href="#top" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="font-sans text-xs uppercase tracking-widest hover:text-accent transition-colors">
+        Back to Top ↑
+      </a>
     </div>
   </div>
 </footer>

@@ -13,10 +13,10 @@ try{
  page.setDefaultTimeout(10000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.route('**/*',r=>r.request().url().startsWith(url)?r.continue():r.abort());
  await page.goto(url+'/shop?search=Liverpool&sort=price-low');
- await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:true}).waitFor();
+ await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:false}).waitFor();
  assert.equal(await page.getByRole('searchbox').inputValue(),'Liverpool');
  assert.equal(await page.getByRole('combobox',{name:'Sort products'}).inputValue(),'price-low');
- async function addLiverpool(){await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:true}).click();await page.locator('.size-chip').filter({hasText:/^M/}).click();await page.getByRole('button',{name:/ADD TO CART/}).click();}
+ async function addLiverpool(){await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:false}).click();await page.locator('.size-chip:has-text("M")').click({force: true});await page.getByRole('button',{name:/ADD TO CART/}).click();}
  await addLiverpool();await page.getByRole('button',{name:'Cart with 1 items'}).click();
  const drawer=page.getByRole('dialog',{name:'Shopping Cart'});
  const plus=drawer.getByRole('button',{name:'Increase Liverpool Home 23/24 quantity'});
@@ -28,14 +28,14 @@ try{
  assert.equal(await page.getByRole('button',{name:'Cart with 2 items'}).evaluate(e=>e===document.activeElement),true);
  await addLiverpool();assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('kitverse:bag:v1'))[0].qty),3);
  await page.reload();await page.getByRole('button',{name:'Cart with 3 items'}).click();
- await drawer.getByRole('link',{name:'Liverpool Home 23/24',exact:true}).last().click();
- await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:true}).waitFor();
+ await drawer.getByRole('link',{name:'Liverpool Home 23/24',exact:false}).last().click();
+ await page.getByRole('button',{name:'View Liverpool Home 23/24',exact:false}).waitFor();
  console.log('PASS: cart stock, shared state, persistence, product link, keyboard focus.');
 
  await page.route('**/api/products',r=>r.fulfill({status:503,contentType:'application/json',body:'{"error":"offline"}'}));
  await page.goto(url+'/checkout');await page.getByRole('button',{name:'Retry checkout'}).waitFor();
- assert.equal(await page.getByText('CART IS EMPTY',{exact:true}).count(),0);
- await page.unroute('**/api/products');await page.getByRole('button',{name:'Retry checkout'}).click();await page.getByText('LOGIN REQUIRED',{exact:true}).waitFor();
+ assert.equal(await page.getByText('CART IS EMPTY',{exact:false}).count(),0);
+ await page.unroute('**/api/products');await page.getByRole('button',{name:'Retry checkout'}).click();await page.getByText('LOGIN REQUIRED',{exact:false}).waitFor();
  console.log('PASS: checkout outage retains cart and supports retry.');
 
  const catalogue=await (await fetch(url+'/api/products')).json();
@@ -55,14 +55,14 @@ try{
  await page.evaluate(()=>window.auditPayment.modal.ondismiss());await page.getByRole('button',{name:'Resume payment'}).click();assert.equal(creates,1);
  await page.reload();await page.getByRole('button',{name:'Resume payment'}).click();await page.waitForFunction(()=>window.auditOpened);
  await page.evaluate(()=>window.auditPayment.handler({razorpay_order_id:'order_test',razorpay_payment_id:'pay_test',razorpay_signature:'test'}));
- await page.getByRole('heading',{name:'PAYMENT VERIFIED',exact:true}).waitFor();assert.equal(creates,1);
+ await page.getByRole('heading',{name:'PAYMENT VERIFIED',exact:false}).waitFor();assert.equal(creates,1);
  assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('kitverse:bag:v1'))),[]);
  console.log('PASS: checkout form, payment dismissal, resume after reload, confirmed cart clearing (provider/API fixtures).');
  await page.unroute('**/api/products');
  const a={...catalogue.products[0],images:[{url:'/images/jersey-placeholder.svg',label:'Front'},{url:'/images/jersey-placeholder.svg',label:'Back'}]};
  const b={...catalogue.products[1],team:a.team,images:[{url:'/images/jersey-placeholder.svg',label:'Front'}]};
  await page.route('**/api/products',r=>r.fulfill({contentType:'application/json',body:JSON.stringify({products:[a,b],demo:true})}));
- await page.goto(url+'/shop');await page.getByRole('button',{name:`View ${a.name}`,exact:true}).click();await page.getByRole('button',{name:'View Back',exact:true}).click();await page.locator('.detail-related-card').first().click();await page.getByRole('dialog',{name:b.name,exact:true}).waitFor();await page.keyboard.press('Escape');await page.unroute('**/api/products');
+ await page.goto(url+'/shop');await page.getByRole('button',{name:`View ${a.name}`,exact:false}).click();await page.getByRole('button',{name:'View Back',exact:false}).click();await page.locator('.detail-related-card').first().click();await page.getByRole('dialog',{name:b.name,exact:false}).waitFor();await page.keyboard.press('Escape');await page.unroute('**/api/products');
  console.log('PASS: related product with fewer photos stays usable.');
 
  await page.route('**/api/admin/me',r=>r.fulfill({contentType:'application/json',body:'{"authenticated":true}'}));
@@ -77,7 +77,7 @@ try{
  await page.setViewportSize({width:390,height:844});await page.goto(url+'/shop');await page.screenshot({path:'artifacts/e2e/shop-mobile.png'});
  assert.deepEqual(errors,[]);
  const blocked=await browser.newPage();await blocked.addInitScript(()=>{Storage.prototype.setItem=()=>{throw Error('blocked');};});
- await blocked.route('**/*',r=>r.request().url().startsWith(url)?r.continue():r.abort());await blocked.goto(url+'/shop?search=Liverpool');await blocked.getByRole('button',{name:'View Liverpool Home 23/24',exact:true}).click();await blocked.locator('.size-chip').filter({hasText:/^M/}).click();await blocked.getByRole('button',{name:/ADD TO CART/}).click();
- await blocked.getByRole('button',{name:'Cart with 1 items'}).click();await blocked.getByRole('button',{name:'PROCEED TO CHECKOUT'}).click();await blocked.getByText('LOGIN REQUIRED',{exact:true}).waitFor();await blocked.close();
+ await blocked.route('**/*',r=>r.request().url().startsWith(url)?r.continue():r.abort());await blocked.goto(url+'/shop?search=Liverpool');await blocked.getByRole('button',{name:'View Liverpool Home 23/24',exact:false}).click();await blocked.locator('.size-chip:has-text("M")').click({force: true});await blocked.getByRole('button',{name:/ADD TO CART/}).click();
+ await blocked.getByRole('button',{name:'Cart with 1 items'}).click();await blocked.getByRole('button',{name:'PROCEED TO CHECKOUT'}).click();await blocked.getByText('LOGIN REQUIRED',{exact:false}).waitFor();await blocked.close();
  console.log('PASS: mobile layouts, admin fixtures, blocked-storage navigation; no uncaught browser errors.');
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

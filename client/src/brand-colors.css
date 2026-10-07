@@ -1,64 +1,41 @@
 :root {
-  --brand-yellow: #f3e246;
-  --brand-yellow-dim: #d4ac0d;
-  --brand-yellow-ink: #1C1917;
-  --brand-yellow-wash: #FAFAF9;
-  --lime: var(--brand-yellow);
-  
-  --color-primary: #1C1917;
-  --color-on-primary: #FFFFFF;
-  --color-accent: #f3e246;
-  --color-on-accent: #1C1917;
-  --color-background: #FAFAF9;
-  --color-foreground: #0C0A09;
-  --color-card: #FFFFFF;
-  --color-card-foreground: #0C0A09;
-  --color-border: #D6D3D1;
-  --color-ring: #1C1917;
+  /* FOLLOW.ART Strict Palette Map */
+  --color-1: #000000;
+  --color-2: #0000FF;
+  --color-3: #808080;
+  --color-4: #8E9487;
+  --color-5: #F4793A;
+  --color-6: #C5939D;
+  --color-7: #FFFFFF;
+
+  /* Semantic Theme Variables used by legacy components */
+  --color-primary: var(--color-1);
+  --color-on-primary: var(--color-7);
+  --color-secondary: var(--color-3);
+  --color-accent: var(--color-5);
+  --color-on-accent: var(--color-1);
+  --color-background: var(--color-7);
+  --color-foreground: var(--color-1);
+  --color-card: var(--color-7);
+  --color-border: var(--color-3);
+  --color-text-light: var(--color-7);
+  --color-bg-dark-1: var(--color-4);
+  --color-bg-dark-2: var(--color-6);
+  --color-ring: var(--color-1);
+
+  /* Legacy brand colors used in shop-page.css / style.css */
+  --brand-yellow: var(--color-5);
+  --brand-yellow-dim: var(--color-5);
+  --brand-yellow-ink: var(--color-1);
+  --brand-yellow-wash: var(--color-7);
+  --lime: var(--color-5);
+  --ink: var(--color-1);
+  --paper: var(--color-7);
+  --muted: var(--color-3);
 }
 
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
+  font-family: 'Inter', sans-serif;
 }
-
-/* Base tailwind classes override */
-.bg-primary-container,
-.bg-primary-fixed,
-.bg-primary-fixed-dim,
-.bg-primary { background-color: var(--color-primary) !important; color: var(--color-on-primary) !important; }
-.text-on-primary,
-.text-on-primary-fixed,
-.text-on-primary-fixed-variant,
-.text-on-primary-container { color: var(--color-on-primary) !important; }
-.text-primary { color: var(--color-primary) !important; }
-.text-primary-container { color: var(--color-primary) !important; }
-.border-primary,
-.border-primary-container,
-.border-primary-fixed { border-color: var(--color-primary) !important; }
-.ring-primary { --tw-ring-color: var(--color-primary) !important; }
-.accent-primary { accent-color: var(--color-primary) !important; }
-
-:focus-visible { outline-color: var(--color-ring) !important; }
-h1 em,
-.bestsellers-header h2 em { color: var(--color-accent) !important; font-style: normal; }
-.hero-counter-num,
-.detail-team-pill { color: var(--color-primary) !important; }
-.hero-progress-bar { background: var(--color-accent) !important; }
-.team-item:focus-visible .team-circle-stage { outline-color: var(--color-primary) !important; }
-.sizes-list,
-.stock-note,
-.detail-stock-alert { color: var(--color-foreground) !important; }
-.detail-stock-alert { background: var(--color-border) !important; }
-.stock-dot,
-.live-dot { background: var(--color-accent) !important; }
-@keyframes livePulse {
-  0% { transform: scale(.95); box-shadow: 0 0 0 0 rgba(243, 226, 70, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(243, 226, 70, 0); }
-  100% { transform: scale(.95); box-shadow: 0 0 0 0 rgba(243, 226, 70, 0); }
-}
-.site-header .desktop-nav .current::after,
-.home-page .desktop-nav .current::after { background: var(--color-primary) !important; }
-.site-header .mobile-collections .current,
-.home-page .mobile-collections .current { border-bottom-color: var(--color-primary) !important; }
-.home-page [class~="text-[#5d6300]"] { color: var(--color-foreground) !important; }
